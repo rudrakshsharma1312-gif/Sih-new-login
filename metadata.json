@@ -1,0 +1,5 @@
+{
+  "name": "QUANTA — Quantum-Inspired Traffic Route Optimization",
+  "description": "Multi-vehicle route optimization on the Bengaluru road network using quantum-inspired particle swarm optimization.",
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

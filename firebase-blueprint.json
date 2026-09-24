@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "Company": {
+      "title": "Company",
+      "description": "Registered logistics or transportation company with fleet manager details",
+      "type": "object",
+      "properties": {
+        "companyName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Name of the fleet company"
+        },
+        "managerName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Name of the manager who registered"
+        },
+        "driverCount": {
+          "type": "number",
+          "description": "Initial number of drivers registered"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of registration"
+        }
+      },
+      "required": ["companyName", "managerName", "createdAt"]
+    },
+    "Driver": {
+      "title": "Driver",
+      "description": "Registered driver belonging to a fleet company",
+      "type": "object",
+      "properties": {
+        "driverName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Full name of the driver"
+        },
+        "mobileNo": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 20,
+          "description": "Mobile number used by the driver to log in"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 100,
+          "description": "Authentication credential"
+        },
+        "companyName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Fleet company the driver is employed at"
+        },
+        "vehicleIndex": {
+          "type": "number",
+          "description": "Index of vehicle assigned (0-based)"
+        },
+        "assignedRoute": {
+          "type": "string",
+          "description": "Optional assigned route details or JSON"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of driver registration"
+        }
+      },
+      "required": ["driverName", "mobileNo", "password", "companyName", "createdAt"]
+    },
+    "RouteAssignment": {
+      "title": "RouteAssignment",
+      "description": "Live optimized route assignment for a vehicle and driver",
+      "type": "object",
+      "properties": {
+        "companyName": {
+          "type": "string",
+          "description": "Company name"
+        },
+        "vehicleIndex": {
+          "type": "number",
+          "description": "Vehicle index"
+        },
+        "driverMobile": {
+          "type": "string",
+          "description": "Mobile number of the driver assigned"
+        },
+        "stops": {
+          "type": "string",
+          "description": "Summary of stops"
+        },
+        "distanceKm": {
+          "type": "number",
+          "description": "Total distance in km"
+        },
+        "timeMin": {
+          "type": "number",
+          "description": "Estimated time in minutes"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of update"
+        }
+      },
+      "required": ["companyName", "vehicleIndex", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/companies/{companyId}": {
+      "schema": "Company",
+      "description": "Logistics companies and their fleet managers"
+    },
+    "/drivers/{driverId}": {
+      "schema": "Driver",
+      "description": "Registered fleet drivers with mobile and credentials"
+    },
+    "/routeAssignments/{assignmentId}": {
+      "schema": "RouteAssignment",
+      "description": "Live optimized route assignments for drivers"
+    }
+  }
+}
