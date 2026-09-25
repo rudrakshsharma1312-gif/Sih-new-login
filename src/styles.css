@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * QUANTA — Liquid obsidian design system.
- * Dark instrument palette, single ember accent for the optimal route.
+ * QUANTA — Modern Logistics & Route Command System
+ * Inspired by Move. (Inter Tight typography, #FFD358 canary accent, #080A0C carbon contrast, #F3F3F3 surface)
  */
 
 @theme inline {
@@ -15,6 +15,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 16px);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -36,57 +37,59 @@
   --color-popover: var(--obsidian);
   --color-popover-foreground: var(--foreground);
   --color-primary: var(--ember);
-  --color-primary-foreground: var(--void);
+  --color-primary-foreground: #080a0c;
   --color-secondary: var(--glasshi);
   --color-secondary-foreground: var(--foreground);
   --color-muted: var(--glass);
   --color-muted-foreground: var(--mist);
-  --color-accent: var(--glasshi);
-  --color-accent-foreground: var(--foreground);
+  --color-accent: var(--ember);
+  --color-accent-foreground: #080a0c;
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--foreground);
+  --color-destructive-foreground: #ffffff;
   --color-border: var(--line);
   --color-input: var(--line);
   --color-ring: var(--ember);
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
-  --radius: 0.75rem;
-  --void: oklch(0.13 0.004 285);
-  --obsidian: oklch(0.175 0.006 285);
-  --glass: oklch(0.213 0.01 285);
-  --glasshi: oklch(0.253 0.014 285);
-  --line: oklch(0.303 0.016 285);
-  --ember: oklch(0.723 0.185 46);
-  --emberdim: oklch(0.52 0.15 44);
-  --mist: oklch(0.723 0.012 285);
-  --faint: oklch(0.487 0.016 285);
-  --azure: oklch(0.65 0.09 245);
-  --violet: oklch(0.66 0.11 300);
-  --amber: oklch(0.78 0.12 85);
-  --destructive: oklch(0.6 0.2 20);
+  --radius: 1rem;
+  --void: #080a0c;
+  --obsidian: #11141a;
+  --glass: #171b23;
+  --glasshi: #202632;
+  --line: #29303d;
+  --ember: #ffd358;
+  --emberdim: #e6bc3c;
+  --mist: #9ca3af;
+  --faint: #6b7280;
+  --azure: #38bdf8;
+  --violet: #a855f7;
+  --amber: #f59e0b;
+  --destructive: #ef4444;
   --background: var(--void);
-  --foreground: oklch(0.985 0 0);
+  --foreground: #f9fafb;
 }
 
 html.light {
-  --void: oklch(0.982 0.003 90);
-  --obsidian: oklch(0.998 0 0);
-  --glass: oklch(0.965 0.004 90);
-  --glasshi: oklch(0.935 0.006 90);
-  --line: oklch(0.885 0.006 90);
-  --ember: oklch(0.6 0.19 44);
-  --emberdim: oklch(0.68 0.15 44);
-  --mist: oklch(0.46 0.012 285);
-  --faint: oklch(0.6 0.012 285);
-  --azure: oklch(0.5 0.12 245);
-  --violet: oklch(0.5 0.14 300);
-  --amber: oklch(0.62 0.13 75);
-  --foreground: oklch(0.19 0.008 285);
+  --void: #f3f3f3;
+  --obsidian: #ffffff;
+  --glass: #ffffff;
+  --glasshi: #f9fafb;
+  --line: #e5e7eb;
+  --ember: #ffd358;
+  --emberdim: #e6bc3c;
+  --mist: #6b7280;
+  --faint: #9ca3af;
+  --azure: #0284c7;
+  --violet: #7c3aed;
+  --amber: #d97706;
+  --destructive: #dc2626;
+  --background: var(--void);
+  --foreground: #080a0c;
 }
 
 html.light body {
@@ -164,4 +167,52 @@ html.light body {
 
 @utility rise {
   animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@utility card-move {
+  background: var(--obsidian);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 4px 24px -2px rgba(0, 0, 0, 0.04),
+    0 2px 8px -1px rgba(0, 0, 0, 0.02);
+}
+
+@utility badge-move-transit {
+  background-color: #ffd358;
+  color: #080a0c;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+@utility badge-move-delivered {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+@utility badge-move-pending {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }

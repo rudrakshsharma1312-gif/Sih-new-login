@@ -10,33 +10,32 @@ type Props = {
 };
 
 const LIGHT_STYLE = [
+  { featureType: "all", elementType: "geometry", stylers: [{ color: "#f4f5f7" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#e2e8f0" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#e5e7eb" }] },
   { featureType: "poi", stylers: [{ visibility: "off" }] },
   { featureType: "transit", stylers: [{ visibility: "off" }] },
   { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] },
 ];
 
-const ROUTE_COLORS = ["#ff7a29", "#ffb066", "#38bdf8", "#a78bfa", "#34d399", "#f43f5e"];
+const ROUTE_COLORS = ["#ffd358", "#080a0c", "#38bdf8", "#10b981", "#a855f7", "#f59e0b"];
 
 const DARK_STYLE = [
-  { elementType: "geometry", stylers: [{ color: "#0f0f14" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#6b6b7b" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#0a0a0e" }] },
+  { elementType: "geometry", stylers: [{ color: "#080a0c" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#6b7280" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#080a0c" }] },
   { featureType: "poi", stylers: [{ visibility: "off" }] },
   { featureType: "transit", stylers: [{ visibility: "off" }] },
-  { featureType: "road", elementType: "geometry", stylers: [{ color: "#22222c" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#1a1f29" }] },
   {
     featureType: "road.highway",
     elementType: "geometry",
-    stylers: [{ color: "#2f2f3c" }],
+    stylers: [{ color: "#252c3b" }],
   },
   { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0b0b12" }] },
-  {
-    featureType: "administrative",
-    elementType: "geometry.stroke",
-    stylers: [{ color: "#2a2a36" }],
-  },
-  { featureType: "landscape", stylers: [{ color: "#121218" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0d1117" }] },
+  { featureType: "landscape", stylers: [{ color: "#11141a" }] },
 ];
 
 let loaderPromise: Promise<void> | null = null;
@@ -141,12 +140,11 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
         ? localStorage.getItem("quanta_custom_gmaps_key") || undefined
         : undefined;
 
-    const envKey = (import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY"] ||
-      import.meta.env["VITE_GOOGLE_MAPS_API_KEY"]) as string | undefined;
+    const envKey = (import.meta.env["VITE_GOOGLE_MAPS_API_KEY"] ||
+      import.meta.env["VITE_MAPS_API_KEY"]) as string | undefined;
 
     const key = userCustomKey || envKey;
-    const channel = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID"] as
-      string | undefined;
+    const channel = import.meta.env["VITE_GOOGLE_MAPS_TRACKING_ID"] as string | undefined;
 
     // Fail-safe auth failure handler
     const handleAuthFail = () => {
@@ -387,9 +385,9 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
         }`}
       />
 
-      {/* High-Precision Interactive Vector Graph Map (Used when offline, loading, or in vector mode) */}
+      {/* High-Precision Interactive Vector Graph Map (Move. 3D Architectural City aesthetic) */}
       {(status !== "ready" || mapMode === "vector") && (
-        <div className="absolute inset-0 z-10 flex flex-col bg-[#0b0b10] select-none">
+        <div className="absolute inset-0 z-10 flex flex-col bg-void select-none transition-colors">
           <svg viewBox="0 0 800 600" className="size-full" preserveAspectRatio="xMidYMid meet">
             <defs>
               <filter id={`glow-${gradientId}`} x="-20%" y="-20%" width="140%" height="140%">
@@ -399,35 +397,78 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
-              <linearGradient id={`bgGrid-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#14141d" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#0b0b10" stopOpacity="0.8" />
+              <linearGradient id={`cubeTop-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffe685" />
+                <stop offset="100%" stopColor="#ffd358" />
+              </linearGradient>
+              <linearGradient id={`cubeLeft-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#e6bc3c" />
+                <stop offset="100%" stopColor="#cfa528" />
+              </linearGradient>
+              <linearGradient id={`cubeRight-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffd358" />
+                <stop offset="100%" stopColor="#dfb22d" />
               </linearGradient>
             </defs>
 
-            {/* Background grid */}
-            <rect width="800" height="600" fill={`url(#bgGrid-${gradientId})`} />
-            <g stroke="#1a1a24" strokeWidth="0.5" strokeDasharray="3,6">
-              {[100, 200, 300, 400, 500, 600, 700].map((x) => (
-                <line key={`x-${x}`} x1={x} y1="0" x2={x} y2="600" />
-              ))}
-              {[100, 200, 300, 400, 500].map((y) => (
-                <line key={`y-${y}`} x1="0" y1={y} x2="800" y2={y} />
-              ))}
+            {/* Base Background & Architectural Grid */}
+            <rect width="800" height="600" fill="currentColor" className="text-void" />
+
+            {/* Isometric architectural building blocks background */}
+            <g
+              className={theme === "light" ? "text-[#e5e7eb]" : "text-[#161a22]"}
+              fill="currentColor"
+              stroke={theme === "light" ? "#d1d5db" : "#242c38"}
+              strokeWidth="0.5"
+            >
+              {/* City district silhouettes */}
+              <rect x="80" y="60" width="110" height="70" rx="6" />
+              <rect x="220" y="75" width="90" height="65" rx="6" />
+              <rect x="340" y="50" width="140" height="80" rx="8" />
+              <rect x="510" y="70" width="120" height="90" rx="8" />
+              <rect x="650" y="90" width="90" height="75" rx="6" />
+
+              <rect x="70" y="160" width="100" height="90" rx="8" />
+              <rect x="490" y="190" width="130" height="85" rx="8" />
+              <rect x="640" y="200" width="110" height="110" rx="8" />
+
+              <rect x="80" y="280" width="120" height="80" rx="8" />
+              <rect x="580" y="340" width="140" height="95" rx="8" />
+
+              <rect x="90" y="390" width="130" height="100" rx="8" />
+              <rect x="250" y="470" width="160" height="80" rx="8" />
+              <rect x="440" y="460" width="150" height="90" rx="8" />
+              <rect x="620" y="470" width="120" height="80" rx="8" />
             </g>
 
-            {/* Arterial Road Network Backbone (Ring Roads & Corridors) */}
-            <g stroke="#22222e" strokeWidth="1.5" fill="none">
-              {/* Outer Ring Road loop */}
-              <ellipse cx="420" cy="300" rx="270" ry="190" strokeDasharray="6,4" />
-              {/* Central hub connectors */}
+            {/* Clean Road Network Arteries */}
+            <g
+              stroke={theme === "light" ? "#ffffff" : "#242a35"}
+              strokeWidth="10"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            >
+              <ellipse cx="420" cy="300" rx="270" ry="190" />
+              <line x1="170" y1="120" x2="380" y2="280" />
+              <line x1="380" y1="280" x2="680" y2="270" />
+              <line x1="380" y1="280" x2="520" y2="480" />
+              <line x1="380" y1="280" x2="250" y2="450" />
+            </g>
+            <g
+              stroke={theme === "light" ? "#e2e4e8" : "#1b2029"}
+              strokeWidth="1.5"
+              fill="none"
+              strokeDasharray="4,6"
+            >
+              <ellipse cx="420" cy="300" rx="270" ry="190" />
               <line x1="170" y1="120" x2="380" y2="280" />
               <line x1="380" y1="280" x2="680" y2="270" />
               <line x1="380" y1="280" x2="520" y2="480" />
               <line x1="380" y1="280" x2="250" y2="450" />
             </g>
 
-            {/* Ghost Routes (GA baseline if available) */}
+            {/* Ghost Routes (Baseline GA / comparison) */}
             {ghostRoutes.map((r, rIdx) => {
               const points = r
                 .map((nIdx) => {
@@ -441,15 +482,15 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
                   key={`ghost-${rIdx}`}
                   points={points}
                   fill="none"
-                  stroke="#5f5f70"
-                  strokeWidth="1.5"
+                  stroke="#9ca3af"
+                  strokeWidth="2"
                   strokeDasharray="4,4"
                   opacity="0.4"
                 />
               );
             })}
 
-            {/* Active Optimized Routes */}
+            {/* Active Optimized Routes - Move. bold canary yellow accent */}
             {routes.map((r, rIdx) => {
               const points = r
                 .map((nIdx) => {
@@ -458,25 +499,27 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
                   return `${x},${y}`;
                 })
                 .join(" ");
-              const color = ROUTE_COLORS[rIdx % ROUTE_COLORS.length] ?? "#ff7a29";
+              const color = ROUTE_COLORS[rIdx % ROUTE_COLORS.length] ?? "#ffd358";
+              const isPrimary = rIdx === 0;
 
               return (
                 <g key={`route-${rIdx}`}>
-                  {/* Glow layer */}
+                  {/* Underlay casing */}
                   <polyline
                     points={points}
                     fill="none"
-                    stroke={color}
-                    strokeWidth="5"
-                    strokeOpacity="0.3"
-                    filter={`url(#glow-${gradientId})`}
+                    stroke={theme === "light" ? "#080a0c" : "#ffffff"}
+                    strokeWidth={isPrimary ? "5.5" : "4"}
+                    strokeOpacity={isPrimary ? "0.85" : "0.3"}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                  {/* Solid route line */}
+                  {/* Vibrant inner route */}
                   <polyline
                     points={points}
                     fill="none"
                     stroke={color}
-                    strokeWidth="2.5"
+                    strokeWidth={isPrimary ? "4" : "2.5"}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -484,7 +527,7 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
               );
             })}
 
-            {/* Node Markers */}
+            {/* Node Markers - Move. style 3D Cube Depot and Circular Location Pins */}
             {ALL_NODES.map((node, idx) => {
               const [x, y] = toSvgCoord(node.lat, node.lng);
               const isDepot = idx === 0;
@@ -498,49 +541,105 @@ export function CityMap({ routes, ghostRoutes = [], className = "" }: Props) {
                   onMouseLeave={() => setHoveredNode(null)}
                 >
                   {isDepot ? (
-                    // Peenya Depot Marker
-                    <g>
+                    // Move. 3D Yellow Building Cube Marker for Peenya Base Depot
+                    <g transform={`translate(${x}, ${y})`} className="filter drop-shadow-md">
+                      {/* Pulse aura */}
                       <circle
-                        cx={x}
-                        cy={y}
-                        r="12"
-                        fill="#ff7a29"
-                        fillOpacity="0.2"
+                        cx="0"
+                        cy="0"
+                        r="20"
+                        fill="#ffd358"
+                        fillOpacity="0.25"
                         className="animate-pulse"
                       />
-                      <circle cx={x} cy={y} r="7" fill="#ffffff" stroke="#ff7a29" strokeWidth="3" />
+                      {/* 3D Isometric Cube */}
+                      {/* Top face */}
+                      <polygon
+                        points="0,-16 14,-9 0,-2 -14,-9"
+                        fill={`url(#cubeTop-${gradientId})`}
+                      />
+                      {/* Left face */}
+                      <polygon
+                        points="-14,-9 0,-2 0,12 -14,5"
+                        fill={`url(#cubeLeft-${gradientId})`}
+                      />
+                      {/* Right face */}
+                      <polygon
+                        points="0,-2 14,-9 14,5 0,12"
+                        fill={`url(#cubeRight-${gradientId})`}
+                      />
+                      {/* Black pin badge on cube */}
+                      <circle cx="0" cy="-6" r="4.5" fill="#080a0c" />
+                      <circle cx="0" cy="-6" r="2" fill="#ffd358" />
+                      {/* Depot label */}
+                      <rect x="18" y="-14" width="130" height="20" rx="4" fill="#080a0c" />
                       <text
-                        x={x + 12}
-                        y={y - 8}
-                        fill="#ff7a29"
-                        fontSize="11"
+                        x="24"
+                        y="0"
+                        fill="#ffd358"
+                        fontSize="10"
                         fontFamily="monospace"
                         fontWeight="bold"
                       >
-                        PEENYA DEPOT (BASE)
+                        PEENYA DEPOT ⌂
                       </text>
                     </g>
                   ) : (
-                    // Delivery Node Marker
+                    // Move. styled Delivery Pin Drop
                     <g>
+                      {/* Pin aura on hover */}
+                      {isHovered && (
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="14"
+                          fill="#ffd358"
+                          fillOpacity="0.3"
+                          className="animate-ping"
+                        />
+                      )}
+                      {/* Dark pin base */}
                       <circle
                         cx={x}
                         cy={y}
-                        r={isHovered ? "7" : "4.5"}
-                        fill={isHovered ? "#ff7a29" : "#191924"}
-                        stroke={isHovered ? "#ffffff" : "#68687a"}
-                        strokeWidth={isHovered ? "2" : "1.2"}
+                        r={isHovered ? "8" : "5.5"}
+                        fill={isHovered ? "#ffd358" : "#080a0c"}
+                        stroke="#ffffff"
+                        strokeWidth="1.5"
+                        className="transition-all"
                       />
-                      <text
-                        x={x + 7}
-                        y={y + 3}
-                        fill={isHovered ? "#ffffff" : "#8e8e9f"}
-                        fontSize={isHovered ? "10" : "8"}
-                        fontFamily="monospace"
-                        opacity={isHovered ? 1 : 0.8}
-                      >
-                        {node.name}
-                      </text>
+                      {/* Inner dot */}
+                      <circle
+                        cx={x}
+                        cy={y}
+                        r={isHovered ? "3.5" : "2"}
+                        fill={isHovered ? "#080a0c" : "#ffd358"}
+                      />
+                      {/* Node name badge */}
+                      {(isHovered || idx <= 5) && (
+                        <g>
+                          <rect
+                            x={x + 9}
+                            y={y - 8}
+                            width={node.name.length * 6 + 12}
+                            height="16"
+                            rx="4"
+                            fill={isHovered ? "#080a0c" : theme === "light" ? "#ffffff" : "#171b23"}
+                            stroke={theme === "light" ? "#e5e7eb" : "#2b3240"}
+                            strokeWidth="1"
+                          />
+                          <text
+                            x={x + 15}
+                            y={y + 4}
+                            fill={isHovered ? "#ffd358" : "currentColor"}
+                            className="text-foreground font-semibold"
+                            fontSize="9"
+                            fontFamily="sans-serif"
+                          >
+                            {node.name}
+                          </text>
+                        </g>
+                      )}
                     </g>
                   )}
                 </g>

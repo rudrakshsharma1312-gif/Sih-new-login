@@ -156,73 +156,78 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
         </header>
       )}
 
-      {/* Main Driver Content */}
+      {/* Main Driver Content - Move. inspired */}
       <main className={embedded ? "w-full pt-2" : "mx-auto max-w-[1280px] px-6 pt-6"}>
         {/* Route Privacy Banner */}
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-ember/30 bg-ember/[0.07] px-4 py-2.5">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-line bg-card p-3 shadow-xs">
           <div className="flex items-center gap-2.5">
-            <span className="size-2 animate-pulse rounded-full bg-ember" />
-            <p className="font-mono text-[11px] text-mist">
-              <span className="font-semibold text-foreground">ISOLATED DRIVER VIEW:</span> Showing
-              exclusively{" "}
-              <span className="text-ember font-bold">Vehicle #{vehicleIdx + 1}&apos;s Route</span>
+            <span className="size-2.5 rounded-full bg-ember animate-pulse" />
+            <p className="font-mono text-xs text-mist">
+              <span className="font-bold text-foreground">ASSIGNED FLEET COCKPIT:</span> Exclusively{" "}
+              <span className="text-foreground font-bold underline decoration-ember decoration-2 underline-offset-2">
+                Vehicle #{vehicleIdx + 1}&apos;s Route
+              </span>
               {hasCustomRoute ? (
-                <span className="ml-2 rounded bg-ember/20 px-1.5 py-0.5 text-[10px] text-ember font-semibold">
-                  Custom Manager Mapped Route
+                <span className="ml-2 rounded-md bg-ember/15 px-2 py-0.5 text-[10px] text-foreground font-bold border border-ember/30">
+                  Custom Manager Mapped
                 </span>
               ) : (
-                <span className="ml-2 rounded bg-glass px-1.5 py-0.5 text-[10px] text-faint">
+                <span className="ml-2 rounded-md bg-glasshi px-2 py-0.5 text-[10px] text-faint">
                   QPSO Algorithmic Dispatch
                 </span>
               )}
-              . All other fleet vehicles are restricted to Manager access.
             </p>
           </div>
-          <span className="font-mono text-[10px] text-faint">LIVE · {clock} IST</span>
+          <span className="font-mono text-[11px] text-faint">LIVE · {clock} IST</span>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-12">
           {/* Map Column: ONLY renders this single driver's route */}
-          <div className="lg:col-span-7">
-            <div className="panel overflow-hidden p-2">
-              <div className="mb-2 flex items-center justify-between px-2 pt-1">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-mist">
-                  Active Dispatch Map · Peenya Corridor
-                </span>
-                <span className="font-mono text-[10px] text-ember">1 Route Active</span>
+          <div className="lg:col-span-7 space-y-4">
+            <div className="rounded-3xl border border-line bg-card overflow-hidden p-2.5 shadow-sm">
+              <div className="mb-2 flex items-center justify-between px-3 pt-1">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-ember text-void text-[10px] font-bold">
+                    ↗
+                  </span>
+                  <span className="font-display text-xs font-bold text-foreground">
+                    Live Route Visibility · Bengaluru
+                  </span>
+                </div>
+                <span className="badge-move-transit">:: In Transit</span>
               </div>
               <CityMap
                 // CRITICAL: Only pass this driver's single route!
                 routes={[singleDriverRoute]}
-                className="aspect-[4/3] w-full"
+                className="aspect-[4/3] w-full rounded-2xl"
               />
             </div>
 
-            {/* Route summary telemetry */}
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <div className="panel p-3">
+            {/* Route summary telemetry tiles */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs">
                 <p className="font-mono text-[9px] uppercase tracking-wider text-faint">
                   Total Distance
                 </p>
-                <p className="mt-1 font-display text-lg font-bold text-foreground">
+                <p className="mt-1 font-display text-xl font-extrabold text-foreground">
                   {routeDetails.totalKm.toFixed(1)}{" "}
                   <span className="text-xs font-normal text-mist">km</span>
                 </p>
               </div>
-              <div className="panel p-3">
+              <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs">
                 <p className="font-mono text-[9px] uppercase tracking-wider text-faint">
-                  Estimated Travel
+                  Est. Travel Time
                 </p>
-                <p className="mt-1 font-display text-lg font-bold text-foreground">
+                <p className="mt-1 font-display text-xl font-extrabold text-foreground">
                   {routeDetails.totalMin.toFixed(0)}{" "}
                   <span className="text-xs font-normal text-mist">min</span>
                 </p>
               </div>
-              <div className="panel p-3">
+              <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs">
                 <p className="font-mono text-[9px] uppercase tracking-wider text-faint">
-                  Delivery Waypoints
+                  Delivery Stops
                 </p>
-                <p className="mt-1 font-display text-lg font-bold text-foreground">
+                <p className="mt-1 font-display text-xl font-extrabold text-foreground">
                   {routeDetails.stops.length}{" "}
                   <span className="text-xs font-normal text-mist">stops</span>
                 </p>
@@ -230,89 +235,213 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
             </div>
           </div>
 
-          {/* Turn / Stop Sequence Column */}
-          <div className="lg:col-span-5">
-            <div className="panel p-5">
-              <div className="flex items-center justify-between border-b border-line pb-3">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ember">
-                    Your Assigned Schedule
-                  </p>
-                  <h3 className="font-display text-base font-semibold text-foreground">
-                    Vehicle #{String(vehicleIdx + 1).padStart(2, "0")} Itinerary
-                  </h3>
+          {/* Turn / Stop Sequence Column - Move. UI cards */}
+          <div className="lg:col-span-5 space-y-4">
+            {/* Move. Driver Card */}
+            <div className="rounded-3xl border border-line bg-card p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="relative size-12 rounded-full ring-2 ring-ember p-0.5">
+                    <div className="flex size-full items-center justify-center rounded-full bg-obsidian text-sm font-bold text-foreground">
+                      {driver.driverName?.[0] ?? "D"}
+                    </div>
+                    <span className="absolute bottom-0 right-0 size-3 rounded-full bg-emerald-400 ring-2 ring-card" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="font-display text-sm font-bold text-foreground">
+                        {driver.driverName}
+                      </h4>
+                      <span className="text-xs font-semibold text-amber flex items-center gap-0.5">
+                        ★ 4.8
+                      </span>
+                    </div>
+                    <p className="text-xs text-mist">Delivery Driver · Veh #{vehicleIdx + 1}</p>
+                  </div>
                 </div>
-                <span className="rounded bg-glasshi px-2 py-0.5 font-mono text-[10px] text-mist">
-                  Depot: Peenya
-                </span>
+
+                {/* Communication buttons from Move screenshot */}
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`sms:${driver.mobileNo}`}
+                    className="flex size-9 items-center justify-center rounded-full border border-line bg-glass text-xs text-foreground hover:border-ember transition"
+                    title="Send SMS"
+                  >
+                    💬
+                  </a>
+                  <a
+                    href={`tel:${driver.mobileNo}`}
+                    className="flex size-9 items-center justify-center rounded-full border border-line bg-glass text-xs text-foreground hover:border-ember transition"
+                    title="Call Driver"
+                  >
+                    📞
+                  </a>
+                </div>
               </div>
 
-              {/* Waypoint Checklist */}
-              <div className="mt-4 max-h-[460px] overflow-y-auto pr-1">
-                {/* Starting Depot */}
-                <div className="relative flex items-start gap-3 pb-4">
-                  <div className="relative z-10 flex size-6 items-center justify-center rounded-full border border-ember bg-ember/20 text-xs font-bold text-ember">
-                    0
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-mono text-xs font-semibold text-foreground">
-                      Peenya Depot (Base Origin)
+              {/* Destination Drop-off & Visual Progress Timeline (Move. mockup style) */}
+              <div className="mt-4 border-t border-line/60 pt-3.5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] text-faint">Next Drop-off Corridor</p>
+                    <p className="font-display text-sm font-bold text-foreground">
+                      Drop-off at {routeDetails.stops[0]?.name ?? "Bengaluru Hub"}
                     </p>
-                    <p className="text-[11px] text-mist">
-                      Vehicle dispatch & payload loading point
-                    </p>
+                    <p className="text-[11px] text-mist">Bengaluru, KA · Peenya Dispatch</p>
                   </div>
+                  <span className="badge-move-transit">:: In Transit</span>
                 </div>
 
-                {/* Stops */}
+                {/* Progress bar with yellow filled track & 3D cube milestone */}
+                <div className="mt-4">
+                  <div className="relative flex items-center">
+                    <div className="h-1.5 w-full rounded-full bg-line overflow-hidden">
+                      <div className="h-full w-2/3 bg-ember rounded-full" />
+                    </div>
+                    {/* Yellow 3D cube milestone */}
+                    <div className="absolute left-[65%] -translate-x-1/2 flex size-6 items-center justify-center rounded-md bg-ember text-void text-[11px] font-bold shadow-md">
+                      ⌂
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between font-mono text-[10px] text-mist">
+                    <span>8:15 AM (Departed)</span>
+                    <span className="font-bold text-foreground">
+                      ~{routeDetails.totalMin.toFixed(0)} min ETA
+                    </span>
+                    <span>4:20 PM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Order Details Card (From Screenshot 2 & 3) */}
+            <div className="rounded-3xl border border-line bg-card p-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-line pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-sm font-bold text-foreground">
+                    Order BLR-{String(vehicleIdx + 1).padStart(2, "0")}861
+                  </span>
+                  <span className="badge-move-delivered">Paid</span>
+                </div>
+                <span className="font-mono text-[10px] text-faint">Peenya Base</span>
+              </div>
+
+              {/* Tracking Number pill with copy */}
+              <div className="mt-3 flex items-center justify-between rounded-xl bg-obsidian px-3 py-2 border border-line/60">
+                <div>
+                  <p className="text-[10px] text-faint font-mono">Tracking Number</p>
+                  <p className="font-mono text-xs font-bold text-foreground tracking-wider">
+                    164149816521{vehicleIdx}86
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard?.writeText(`164149816521${vehicleIdx}86`);
+                  }}
+                  className="rounded-lg bg-glass px-2.5 py-1 text-[10px] font-mono text-mist hover:text-foreground transition cursor-pointer"
+                >
+                  Copy 📋
+                </button>
+              </div>
+
+              {/* Order key-value specifications from Move screenshot */}
+              <div className="mt-3 space-y-2 text-xs divide-y divide-line/40">
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-mist">Delivery Address</span>
+                  <span className="font-medium text-foreground text-right">
+                    {routeDetails.stops[0]?.name ?? "MG Road"}, Bengaluru
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-mist">Recipient</span>
+                  <span className="font-medium text-foreground">Regional Logistics Hub</span>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-mist">Delivery Time</span>
+                  <span className="font-medium text-foreground">
+                    Today, ~{routeDetails.totalMin.toFixed(0)} min
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-mist">Payment Method</span>
+                  <span className="font-medium text-foreground">Paid · Fleet Contract</span>
+                </div>
+                <div className="pt-2">
+                  <span className="text-mist block mb-1">Delivery Notes</span>
+                  <p className="rounded-lg bg-obsidian p-2 text-[11px] text-mist italic border border-line/40">
+                    &quot;Please ensure high-priority packages are handled with care — scheduled
+                    depot transit.&quot;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Waypoint Checklist Sequence */}
+            <div className="rounded-3xl border border-line bg-card p-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-line pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-sm font-bold text-foreground">
+                    Delivery Stops ({routeDetails.stops.length})
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] text-faint">Check off completed stops</span>
+              </div>
+
+              <div className="mt-3 space-y-2 max-h-[300px] overflow-y-auto pr-1">
                 {routeDetails.stops.map((st, i) => {
                   const isDone = !!completedStops[i];
                   const isDepotReturn = i === routeDetails.stops.length - 1;
                   return (
-                    <div key={i} className="relative flex items-start gap-3 pb-4">
-                      {/* Timeline line */}
-                      <div className="absolute left-3 top-3 h-full w-[1px] bg-line" />
-                      <button
-                        type="button"
-                        onClick={() => toggleStop(i)}
-                        className={`relative z-10 flex size-6 items-center justify-center rounded-full text-xs font-mono transition-all ${
-                          isDone
-                            ? "bg-emerald-500 text-void font-bold"
-                            : isDepotReturn
-                              ? "border border-ember text-ember bg-glass"
-                              : "border border-line bg-obsidian text-mist hover:border-ember"
-                        }`}
-                      >
-                        {isDone ? "✓" : i + 1}
-                      </button>
-
-                      <div className="flex-1">
-                        <div className="flex items-baseline justify-between">
+                    <div
+                      key={i}
+                      onClick={() => toggleStop(i)}
+                      className={`flex items-center justify-between p-2.5 rounded-xl border transition-all cursor-pointer ${
+                        isDone
+                          ? "bg-glass/40 border-line/40 opacity-60"
+                          : "bg-obsidian border-line hover:border-ember"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className={`flex size-6 items-center justify-center rounded-full text-xs font-bold font-mono transition ${
+                            isDone
+                              ? "bg-emerald-500 text-void"
+                              : isDepotReturn
+                                ? "bg-ember text-void"
+                                : "bg-glass text-foreground border border-line"
+                          }`}
+                        >
+                          {isDone ? "✓" : i + 1}
+                        </div>
+                        <div>
                           <p
-                            className={`font-mono text-xs font-medium ${
-                              isDone ? "text-faint line-through" : "text-foreground"
+                            className={`text-xs font-semibold ${
+                              isDone ? "line-through text-faint" : "text-foreground"
                             }`}
                           >
-                            {st.name} {isDepotReturn ? "(Return to Depot)" : ""}
+                            {st.name} {isDepotReturn ? "(Return Base)" : ""}
                           </p>
-                          <span className="font-mono text-[10px] text-faint">
-                            {st.legKm.toFixed(1)} km · ~{st.legMin.toFixed(0)}m
-                          </span>
+                          <p className="text-[10px] text-mist">
+                            {st.legKm.toFixed(1)} km · ~{st.legMin.toFixed(0)} min
+                          </p>
                         </div>
-                        {!isDepotReturn && (
-                          <p className="text-[11px] text-mist">Demand package: {st.demand} units</p>
-                        )}
                       </div>
+
+                      <span
+                        className={
+                          isDone
+                            ? "badge-move-delivered"
+                            : isDepotReturn
+                              ? "badge-move-transit"
+                              : "badge-move-pending"
+                        }
+                      >
+                        {isDone ? "Delivered" : isDepotReturn ? "Base" : "≤20 kg"}
+                      </span>
                     </div>
                   );
                 })}
-              </div>
-
-              {/* Status Note */}
-              <div className="mt-4 rounded-lg border border-line/60 bg-void/50 p-3 text-xs text-mist">
-                <span className="font-semibold text-foreground">QPSO Route Optimization:</span>{" "}
-                Calculated to minimize commute bottlenecks in Bengaluru inner city. Follow the
-                assigned waypoint sequence in order.
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth, type Company } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme";
+import { QuantumBackgroundAnimation } from "@/components/QuantumBackgroundAnimation";
 
 export function IntroOpeningPage() {
   const {
@@ -165,48 +166,47 @@ export function IntroOpeningPage() {
 
   return (
     <div className="relative min-h-screen bg-void text-foreground selection:bg-ember selection:text-void">
-      {/* Dynamic ambient lighting & grid backdrop */}
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-[600px] w-[1000px] -translate-x-1/2 rounded-full bg-ember/15 blur-[160px]" />
-        <div className="absolute bottom-10 right-10 h-[500px] w-[500px] rounded-full bg-sky-500/10 blur-[140px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#16162208_1px,transparent_1px),linear-gradient(to_bottom,#16162208_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-      </div>
+      {/* Quantum-Inspired Dynamic Opening Swarm & Wave Animation */}
+      <QuantumBackgroundAnimation variant="intro" />
 
-      {/* Top Navigation Bar */}
-      <header className="relative z-10 border-b border-line/60 bg-obsidian/70 backdrop-blur-xl">
+      {/* Top Navigation Bar - Move. inspired */}
+      <header className="relative z-10 border-b border-line bg-obsidian/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="relative grid size-10 place-items-center rounded-xl border border-line bg-gradient-to-br from-glasshi to-obsidian shadow-lg">
-              <span className="glowdot size-3 rounded-full bg-ember animate-pulse" />
-              <span className="speck absolute right-1.5 top-1.5 size-2 bg-foreground/40 rounded-full" />
+            <div className="flex size-10 items-center justify-center rounded-full bg-ember text-void font-extrabold shadow-sm">
+              <span className="text-lg leading-none font-bold">↗</span>
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-display text-lg font-bold tracking-tight text-foreground">
+              <div className="flex items-center gap-1.5">
+                <span className="font-display text-xl font-extrabold tracking-tight text-foreground">
+                  Move
+                </span>
+                <span className="font-mono text-sm font-bold text-ember">.</span>
+                <span className="font-mono text-xs font-semibold text-mist tracking-wider">
                   QUANTA
                 </span>
-                <span className="rounded-full border border-line bg-glass/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-ember">
-                  SIH 2026 · 137
+                <span className="rounded-full border border-line bg-glass px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-foreground">
+                  Fleet OS
                 </span>
               </div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mist">
-                Quantum Fleet Route Intelligence · Bengaluru
+                Autonomous Route Command · Bengaluru
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 rounded-full border border-line bg-glass/50 px-3 py-1 font-mono text-xs text-mist">
+            <div className="hidden sm:flex items-center gap-2 rounded-full border border-line bg-glass px-3 py-1 font-mono text-xs text-foreground">
               <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>25 Graph Nodes · Peenya Base Hub</span>
+              <span>25 Hubs Active · Peenya Depot</span>
             </div>
 
             <button
               onClick={toggleTheme}
-              className="rounded-lg border border-line bg-glass px-2.5 py-1.5 font-mono text-xs text-mist hover:text-foreground transition"
+              className="rounded-full border border-line bg-glass px-3 py-1.5 font-mono text-xs text-foreground hover:border-ember transition cursor-pointer"
               title="Toggle Light/Dark Theme"
             >
-              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+              {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
           </div>
         </div>
@@ -240,56 +240,6 @@ export function IntroOpeningPage() {
               and drivers into a unified command ecosystem with sub-second route convergence.
             </p>
 
-            {/* Quick 1-Click Demo Launchers */}
-            <div className="rounded-2xl border border-line bg-gradient-to-br from-glasshi to-obsidian p-5 shadow-xl">
-              <div className="flex items-center justify-between pb-3 border-b border-line">
-                <p className="font-mono text-[11px] uppercase tracking-wider text-mist">
-                  ⚡ 1-Click Instant Demo Access
-                </p>
-                <span className="font-mono text-[10px] text-faint">No typing required</span>
-              </div>
-
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <button
-                  type="button"
-                  onClick={handleQuickManagerDemo}
-                  className="group flex flex-col items-start rounded-xl border border-ember/40 bg-ember/10 p-3.5 text-left transition-all hover:bg-ember/20 hover:border-ember hover:shadow-lg hover:shadow-ember/10 cursor-pointer"
-                >
-                  <div className="flex w-full items-center justify-between">
-                    <span className="text-lg">🏢</span>
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-ember font-bold">
-                      Manager Portal →
-                    </span>
-                  </div>
-                  <strong className="mt-2 font-display text-sm font-semibold text-foreground group-hover:text-ember transition-colors">
-                    Enter as Fleet Manager
-                  </strong>
-                  <p className="mt-0.5 text-[11px] text-mist">
-                    Dr. Rajesh Sharma · Egreen Quanta Fleet
-                  </p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleQuickDriverDemo("drv-01")}
-                  className="group flex flex-col items-start rounded-xl border border-sky-500/40 bg-sky-500/10 p-3.5 text-left transition-all hover:bg-sky-500/20 hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 cursor-pointer"
-                >
-                  <div className="flex w-full items-center justify-between">
-                    <span className="text-lg">🚚</span>
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-sky-400 font-bold">
-                      Driver Cockpit →
-                    </span>
-                  </div>
-                  <strong className="mt-2 font-display text-sm font-semibold text-foreground group-hover:text-sky-300 transition-colors">
-                    Enter as Delivery Driver
-                  </strong>
-                  <p className="mt-0.5 text-[11px] text-mist">
-                    Ramesh Gowda · Veh #01 (Peenya Corridor)
-                  </p>
-                </button>
-              </div>
-            </div>
-
             {/* Quick architectural specs */}
             <div className="grid grid-cols-3 gap-4 pt-2">
               <div className="rounded-xl border border-line bg-glass/40 p-3">
@@ -307,10 +257,28 @@ export function IntroOpeningPage() {
                 </p>
               </div>
             </div>
+
+            {/* Highlights bullet list */}
+            <div className="grid gap-2.5 sm:grid-cols-2 pt-2">
+              <div className="flex items-center gap-2.5 rounded-xl border border-line/60 bg-glass/30 p-2.5">
+                <span className="text-base">📍</span>
+                <div>
+                  <p className="text-xs font-semibold text-foreground">Peenya Central Base</p>
+                  <p className="text-[10px] text-mist">Primary fleet depot & return hub</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2.5 rounded-xl border border-line/60 bg-glass/30 p-2.5">
+                <span className="text-base">⚡</span>
+                <div>
+                  <p className="text-xs font-semibold text-foreground">Dynamic Congestion</p>
+                  <p className="text-[10px] text-mist">Live congestion penalty multipliers</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Right Column: Integrated Sign In / Sign Up Card */}
-          <div className="lg:col-span-6">
+          {/* Right Column: Integrated Sign In / Sign Up Card + 1-Click Instant Access Below It */}
+          <div className="lg:col-span-6 space-y-4">
             <div className="relative rounded-3xl border border-line bg-gradient-to-b from-obsidian via-obsidian/95 to-void p-6 sm:p-8 shadow-2xl backdrop-blur-2xl">
               {/* Card Header & Tabs */}
               <div className="border-b border-line pb-4">
@@ -441,7 +409,7 @@ export function IntroOpeningPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-foreground py-3 text-sm font-bold text-background transition-all hover:bg-ember hover:text-void disabled:opacity-50 cursor-pointer shadow-lg"
+                    className="w-full rounded-2xl bg-ember py-3.5 text-sm font-extrabold text-void transition-all hover:bg-foreground hover:text-background disabled:opacity-50 cursor-pointer shadow-md"
                   >
                     {loading ? "Authenticating Manager…" : "Sign In to Manager Command Center →"}
                   </button>
@@ -488,7 +456,7 @@ export function IntroOpeningPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-ember py-3 text-sm font-bold text-void transition-all hover:bg-foreground hover:text-background disabled:opacity-50 cursor-pointer shadow-lg"
+                    className="w-full rounded-2xl bg-ember py-3.5 text-sm font-extrabold text-void transition-all hover:bg-foreground hover:text-background disabled:opacity-50 cursor-pointer shadow-md"
                   >
                     {loading ? "Connecting Cockpit…" : "Sign In to Driver Cockpit →"}
                   </button>
@@ -620,7 +588,7 @@ export function IntroOpeningPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-ember py-3 text-sm font-bold text-void transition-all hover:bg-foreground hover:text-background disabled:opacity-50 cursor-pointer shadow-lg"
+                    className="w-full rounded-2xl bg-ember py-3.5 text-sm font-extrabold text-void transition-all hover:bg-foreground hover:text-background disabled:opacity-50 cursor-pointer shadow-md"
                   >
                     {loading ? "Registering Fleet…" : "Create Fleet & Open Dashboard →"}
                   </button>
@@ -686,12 +654,63 @@ export function IntroOpeningPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-foreground py-3 text-sm font-bold text-background transition-all hover:bg-ember hover:text-void disabled:opacity-50 cursor-pointer shadow-lg"
+                    className="w-full rounded-2xl bg-ember py-3.5 text-sm font-extrabold text-void transition-all hover:bg-foreground hover:text-background disabled:opacity-50 cursor-pointer shadow-md"
                   >
                     {loading ? "Registering Driver…" : "Register & Launch Cockpit →"}
                   </button>
                 </form>
               )}
+            </div>
+
+            {/* 1-Click Instant Access (Positioned below Access Workspace) */}
+            <div className="rounded-3xl border border-line bg-gradient-to-b from-obsidian via-obsidian/95 to-void p-5 sm:p-6 shadow-xl">
+              <div className="flex items-center justify-between pb-3 border-b border-line">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-ember text-void text-[10px] font-bold">
+                    ↗
+                  </span>
+                  <h3 className="font-display text-xs font-bold text-foreground">
+                    1-Click Instant Access
+                  </h3>
+                </div>
+                <span className="font-mono text-[10px] text-faint">Pre-configured Roster</span>
+              </div>
+
+              <div className="mt-3.5 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={handleQuickManagerDemo}
+                  className="group flex flex-col items-start rounded-2xl border border-line bg-glass/60 p-4 text-left transition-all hover:border-ember hover:bg-glass hover:shadow-md cursor-pointer"
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <span className="text-xl">🏢</span>
+                    <span className="badge-move-transit">Manager HQ ↗</span>
+                  </div>
+                  <strong className="mt-2.5 font-display text-sm font-bold text-foreground group-hover:text-ember transition-colors">
+                    Enter as Fleet Manager
+                  </strong>
+                  <p className="mt-0.5 text-xs text-mist">
+                    Dr. Rajesh Sharma · Egreen Quanta Fleet
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuickDriverDemo("drv-01")}
+                  className="group flex flex-col items-start rounded-2xl border border-line bg-glass/60 p-4 text-left transition-all hover:border-ember hover:bg-glass hover:shadow-md cursor-pointer"
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <span className="text-xl">🚚</span>
+                    <span className="rounded-md bg-foreground text-background px-2 py-0.5 font-mono text-[10px] font-bold">
+                      Cockpit ↗
+                    </span>
+                  </div>
+                  <strong className="mt-2.5 font-display text-sm font-bold text-foreground group-hover:text-ember transition-colors">
+                    Enter as Delivery Driver
+                  </strong>
+                  <p className="mt-0.5 text-xs text-mist">Ramesh Gowda · Veh #01 (Peenya Route)</p>
+                </button>
+              </div>
             </div>
           </div>
         </div>

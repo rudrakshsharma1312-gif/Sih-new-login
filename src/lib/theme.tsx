@@ -4,12 +4,12 @@ export type Theme = "dark" | "light";
 
 type Ctx = { theme: Theme; toggle: () => void };
 
-const ThemeContext = createContext<Ctx>({ theme: "dark", toggle: () => {} });
+const ThemeContext = createContext<Ctx>({ theme: "light", toggle: () => {} });
 
 const KEY = "quanta-theme";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const stored = window.localStorage.getItem(KEY);

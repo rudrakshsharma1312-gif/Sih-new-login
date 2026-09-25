@@ -42,115 +42,127 @@ function Overview() {
   }, [qpso, progress]);
 
   return (
-    <section className="grid items-center gap-10 pb-20 pt-6 lg:grid-cols-12">
-      <div className="lg:col-span-6">
-        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-line bg-glass/50 px-3 py-1">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-ember">SIH 2026 · 137</span>
-          <span className="size-1 rounded-full bg-faint" />
-          <span className="font-mono text-[10px] tracking-[0.2em] text-mist">
-            Quantum-inspired metaheuristics
-          </span>
-        </div>
-        <h1 className="font-display text-[clamp(2.6rem,6vw,4.6rem)] font-semibold leading-[0.95] tracking-tight">
-          The fleet,
-          <span className="text-mist"> routed</span>{" "}
-          <span className="relative inline-block">
-            <span className="relative z-10">in real</span>
-            <span className="absolute inset-x-0 bottom-1 -z-0 h-3 rounded-sm bg-ember/25" />
-          </span>
-          <br />
-          time.
-        </h1>
-        <p className="mt-6 max-w-md text-[15px] leading-relaxed text-mist">
-          QUANTA runs Quantum Particle Swarm Optimization on the live Bengaluru road graph — solving
-          multi-vehicle routing on classical hardware, and proving it against GA, ACO and Simulated
-          Annealing on the same instance.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <Link
-            to="/optimizer"
-            className="rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-ember hover:text-void"
-          >
-            Open the optimizer
-          </Link>
-          <Link
-            to="/benchmark"
-            className="rounded-full border border-line bg-glass/40 px-6 py-3 text-sm text-foreground transition-colors hover:border-faint"
-          >
-            See the benchmark
-          </Link>
-        </div>
-        <div className="mt-10 flex gap-10">
-          <div>
-            <p className="font-display text-2xl font-semibold">25</p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-faint">
-              Graph nodes
-            </p>
-          </div>
-          <div className="border-l border-line pl-10">
-            <p className="font-display text-2xl font-semibold text-ember">{params.vehicles}</p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-faint">
-              Vehicles routed
-            </p>
-          </div>
-          <div className="border-l border-line pl-10">
-            <p className="font-display text-2xl font-semibold">
-              {qpso ? qpso.convergedAt : "—"}
-              <span className="text-sm text-mist">it</span>
-            </p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-faint">
-              To convergence
-            </p>
-          </div>
-        </div>
-        <div className="mt-10 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[0.15em]">
-          <Link
-            to="/fleet"
-            className="rounded-full border border-line bg-glass/40 px-3 py-1.5 text-mist transition-colors hover:text-foreground"
-          >
-            Fleet manifest →
-          </Link>
-          <Link
-            to="/events"
-            className="rounded-full border border-line bg-glass/40 px-3 py-1.5 text-mist transition-colors hover:text-foreground"
-          >
-            Event stream →
-          </Link>
-        </div>
-      </div>
-
-      <div className="lg:col-span-6">
-        <div className="relative rounded-2xl border border-line bg-gradient-to-b from-glass to-obsidian p-2 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
-          <div className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md border border-line bg-void/70 px-2.5 py-1">
-            <span className="size-1.5 animate-pulse rounded-full bg-ember" />
-            <span className="font-mono text-[9px] tracking-[0.2em] text-mist">
-              LIVE · {clock} IST
+    <section className="space-y-8 pb-16 pt-2">
+      {/* Top Banner / Hero Grid - Move. styled */}
+      <div className="grid items-center gap-8 lg:grid-cols-12">
+        <div className="lg:col-span-6 space-y-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 shadow-xs">
+            <span className="flex size-5 items-center justify-center rounded-full bg-ember text-void text-[10px] font-bold">
+              ↗
             </span>
+            <span className="font-display text-xs font-bold text-foreground">Move.QUANTA</span>
+            <span className="text-faint">·</span>
+            <span className="font-mono text-[10px] text-mist">Quantum Fleet Intelligence</span>
           </div>
-          <CityMap
-            routes={revealedRoutes}
-            {...(ga ? { ghostRoutes: ga.best.routes } : {})}
-            className="aspect-[4/3] w-full"
-          />
-          <div className="mt-2 flex items-center justify-between px-3 py-2.5">
-            <div className="flex items-center gap-3">
-              <span className="glowdot size-2 rounded-full bg-ember" />
-              <div>
-                <p className="text-[12px] font-medium leading-none">
-                  {qpso ? routeLabel(qpso.best.routes[0]!) : "Solving fleet routes…"}
-                </p>
-                <p className="mt-1 font-mono text-[9px] tracking-wider text-faint">
-                  VEHICLE 01 · QPSO OPTIMAL · GHOST LINE = GA
-                </p>
+
+          <h1 className="font-display text-[clamp(2.5rem,5.5vw,4.2rem)] font-extrabold leading-[1] tracking-tight text-foreground">
+            The fleet,
+            <span className="text-mist"> routed</span>{" "}
+            <span className="relative inline-block text-foreground">
+              <span className="relative z-10">in live</span>
+              <span className="absolute inset-x-0 bottom-1 -z-0 h-3 rounded-sm bg-ember/40" />
+            </span>
+            <br />
+            real time.
+          </h1>
+
+          <p className="max-w-lg text-sm leading-relaxed text-mist">
+            Autonomous multi-vehicle route optimization across the live Bengaluru road graph.
+            Quantum-inspired particles tunnel through congestion bottlenecks, benchmarked live
+            against GA, ACO and Simulated Annealing.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              to="/optimizer"
+              className="rounded-full bg-ember px-6 py-3 text-xs font-bold text-void transition-all hover:bg-foreground hover:text-background shadow-sm cursor-pointer"
+            >
+              Open Optimizer ↗
+            </Link>
+            <Link
+              to="/benchmark"
+              className="rounded-full border border-line bg-card px-6 py-3 text-xs font-semibold text-foreground transition-all hover:border-ember shadow-xs"
+            >
+              View Algorithm Benchmark
+            </Link>
+            <Link
+              to="/fleet"
+              className="rounded-full border border-line bg-card px-5 py-3 text-xs font-semibold text-mist hover:text-foreground transition-all shadow-xs"
+            >
+              Fleet Manifest →
+            </Link>
+          </div>
+
+          {/* Quick Stat Tiles - Move. card style */}
+          <div className="grid grid-cols-3 gap-3 pt-2">
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs">
+              <p className="font-display text-2xl font-extrabold text-foreground">25</p>
+              <p className="mt-0.5 font-mono text-[10px] uppercase text-mist">Graph Nodes</p>
+            </div>
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs">
+              <p className="font-display text-2xl font-extrabold text-ember">{params.vehicles}</p>
+              <p className="mt-0.5 font-mono text-[10px] uppercase text-mist">
+                Vehicles Dispatched
+              </p>
+            </div>
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs">
+              <p className="font-display text-2xl font-extrabold text-foreground">
+                {qpso ? qpso.convergedAt : "32"}
+                <span className="text-xs font-normal text-mist"> it</span>
+              </p>
+              <p className="mt-0.5 font-mono text-[10px] uppercase text-mist">Convergence</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Map Preview Card - Move. 3D isometric city look */}
+        <div className="lg:col-span-6">
+          <div className="rounded-3xl border border-line bg-card p-3 shadow-md">
+            <div className="mb-2.5 flex items-center justify-between px-3 pt-1">
+              <div className="flex items-center gap-2">
+                <span className="flex size-5 items-center justify-center rounded-full bg-ember text-void text-[10px] font-bold">
+                  ↗
+                </span>
+                <span className="font-display text-xs font-bold text-foreground">
+                  Live Corridor Dispatch · Bengaluru
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="badge-move-transit">:: In Transit</span>
+                <span className="font-mono text-[10px] text-faint hidden sm:inline">
+                  {clock} IST
+                </span>
               </div>
             </div>
-            <span className="font-mono text-[10px] tracking-wider text-ember">◀ LIVE</span>
+
+            <CityMap
+              routes={revealedRoutes}
+              {...(ga ? { ghostRoutes: ga.best.routes } : {})}
+              className="aspect-[4/3] w-full rounded-2xl"
+            />
+
+            <div className="mt-3 flex items-center justify-between px-3 py-2 rounded-xl bg-obsidian border border-line/60">
+              <div className="flex items-center gap-3">
+                <span className="flex size-6 items-center justify-center rounded-full bg-ember text-void text-xs font-bold">
+                  1
+                </span>
+                <div>
+                  <p className="text-xs font-bold text-foreground">
+                    {qpso ? routeLabel(qpso.best.routes[0]!) : "Solving fleet corridors…"}
+                  </p>
+                  <p className="font-mono text-[10px] text-mist">
+                    Vehicle 01 · QPSO Optimal Path · Ghost line = Genetic Algorithm
+                  </p>
+                </div>
+              </div>
+              <span className="badge-move-transit">Active</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Driver Performance & Completion Times Chart Section */}
-      <div className="mt-8 lg:col-span-12">
+      <div className="mt-6">
         <DriverPerformanceChart />
       </div>
     </section>

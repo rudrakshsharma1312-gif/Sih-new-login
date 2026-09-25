@@ -51,7 +51,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-void font-body text-foreground antialiased">
-      {/* Background ambient lighting */}
+      {/* Static subtle background ambient lighting for routed pages */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute -top-32 left-1/3 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-ember/10 blur-[130px]" />
         <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-ember/[0.05] blur-[100px]" />
@@ -71,68 +71,78 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Brand / Logo Section */}
+        {/* Brand / Logo Section - Move. inspired */}
         <div className="flex items-center justify-between border-b border-line pb-4 pt-1">
-          <Link to="/" onClick={closeMobileMenu} className="flex items-center gap-3">
-            <div className="relative grid size-9 place-items-center overflow-hidden rounded-lg border border-line bg-gradient-to-br from-glasshi to-obsidian">
-              <span className="glowdot size-2.5 rounded-full bg-ember" />
-              <span className="speck absolute right-1 top-1 size-3" />
+          <Link to="/" onClick={closeMobileMenu} className="flex items-center gap-2.5">
+            <div className="flex size-9 items-center justify-center rounded-full bg-ember text-void font-bold shadow-sm">
+              <span className="text-base leading-none font-bold">↗</span>
             </div>
             <div>
-              <p className="font-display text-[16px] font-bold leading-none tracking-tight text-foreground">
-                QUANTA
-              </p>
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.25em] text-ember">
-                Route Intelligence
+              <div className="flex items-center gap-1">
+                <span className="font-display text-[17px] font-extrabold tracking-tight text-foreground">
+                  Move
+                </span>
+                <span className="font-mono text-xs font-bold text-ember">.</span>
+                <span className="font-mono text-[10px] text-mist">QUANTA</span>
+              </div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-mist">
+                Fleet Route Command
               </p>
             </div>
           </Link>
           <button
             onClick={closeMobileMenu}
-            className="rounded border border-line bg-glasshi p-1 text-xs text-mist hover:text-foreground md:hidden"
+            className="rounded-full border border-line bg-glasshi p-1.5 text-xs text-mist hover:text-foreground md:hidden"
             aria-label="Close menu"
           >
             ✕
           </button>
         </div>
 
-        {/* Company & Role Identity Card */}
-        <div className="mt-4 rounded-xl border border-line bg-glass/60 p-3.5 shadow-sm">
+        {/* Company & Role Identity Card - Move. styled */}
+        <div className="mt-4 rounded-2xl border border-line bg-card p-3.5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[9px] uppercase tracking-widest text-faint">
-              Active Workspace
+              Workspace
             </span>
             <span
-              className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold uppercase ${
+              className={`rounded-md px-2 py-0.5 font-mono text-[9px] font-bold uppercase ${
                 isDriver
-                  ? "bg-azure/20 text-azure border border-azure/40"
+                  ? "bg-amber/15 text-amber border border-amber/30"
                   : isManager
-                    ? "bg-ember/20 text-ember border border-ember/40"
+                    ? "bg-ember text-void font-bold shadow-xs"
                     : "bg-glasshi text-mist"
               }`}
             >
-              {isDriver ? "Driver View" : isManager ? "Fleet Manager" : "Demo Mode"}
+              {isDriver ? "Driver Cockpit" : isManager ? "Fleet Manager" : "Demo Mode"}
             </span>
           </div>
 
           <div className="mt-2.5 flex items-center gap-3">
             <div
-              className={`flex size-10 items-center justify-center rounded-lg font-mono text-sm font-bold ${
+              className={`flex size-10 items-center justify-center rounded-full font-mono text-xs font-bold ring-2 ${
                 isDriver
-                  ? "bg-azure/20 text-azure border border-azure/30"
-                  : "bg-ember/20 text-ember border border-ember/30"
+                  ? "bg-obsidian text-ember ring-ember/40"
+                  : "bg-ember text-void ring-ember/50 shadow-sm"
               }`}
             >
-              {isDriver ? `V#${(driverUser?.vehicleIndex ?? 0) + 1}` : "MGR"}
+              {isDriver ? `V#${(driverUser?.vehicleIndex ?? 0) + 1}` : "HQ"}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-sm font-semibold text-foreground">
-                {isDriver
-                  ? driverUser?.driverName
-                  : user
-                    ? (user as { managerName?: string }).managerName
-                    : (company?.managerName ?? "Fleet Manager")}
-              </p>
+              <div className="flex items-center gap-1.5">
+                <p className="truncate font-display text-sm font-bold text-foreground">
+                  {isDriver
+                    ? driverUser?.driverName
+                    : user
+                      ? (user as { managerName?: string }).managerName
+                      : (company?.managerName ?? "Fleet Manager")}
+                </p>
+                {isDriver && (
+                  <span className="text-[10px] font-semibold text-amber flex items-center gap-0.5">
+                    ★ 4.8
+                  </span>
+                )}
+              </div>
               <p className="truncate font-mono text-[10px] text-mist">
                 {isDriver
                   ? `${driverUser?.mobileNo} · ${driverUser?.companyName}`
@@ -366,39 +376,48 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* MAIN CONTENT AREA */}
       <div className="flex flex-1 flex-col min-w-0 md:pl-72">
-        {/* Top Header inside main content area */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-obsidian/90 px-4 md:px-8 backdrop-blur-md">
+        {/* Top Header inside main content area - Move. styled */}
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-line bg-obsidian/90 px-4 md:px-8 backdrop-blur-md">
           {/* Mobile hamburger & title */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="rounded-lg border border-line bg-glass p-2 text-mist hover:text-foreground md:hidden"
+              className="rounded-full border border-line bg-glass p-2 text-mist hover:text-foreground md:hidden"
               aria-label="Open navigation sidebar"
             >
               <span className="text-base leading-none">☰</span>
             </button>
 
-            <div className="flex items-center gap-2">
-              <span className="glowdot size-2 rounded-full bg-ember" />
-              <h1 className="font-display text-sm md:text-base font-semibold tracking-tight text-foreground">
-                {isDriver
-                  ? `Driver Cockpit · Vehicle #${(driverUser?.vehicleIndex ?? 0) + 1} (${driverUser?.driverName})`
-                  : currentPath === "/"
-                    ? "Fleet Command Overview"
-                    : currentPath.replace("/", "").toUpperCase()}
-              </h1>
+            <div className="flex items-center gap-2.5">
+              <span className="flex size-6 items-center justify-center rounded-full bg-ember text-void text-[11px] font-bold">
+                ↗
+              </span>
+              <div>
+                <h1 className="font-display text-sm md:text-base font-bold tracking-tight text-foreground">
+                  {isDriver
+                    ? `Driver Cockpit · Vehicle #${(driverUser?.vehicleIndex ?? 0) + 1}`
+                    : currentPath === "/"
+                      ? "Fleet Command Overview"
+                      : currentPath.replace("/", "").toUpperCase()}
+                </h1>
+                <p className="hidden sm:block font-mono text-[10px] text-mist">
+                  {isDriver
+                    ? `${driverUser?.driverName} · Active Route Assignment`
+                    : "Autonomous Logistics Dispatch · Bengaluru"}
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Right side role switches & quick action controls */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Quick role test switcher */}
-            <div className="hidden sm:flex items-center gap-1.5 rounded-lg border border-line bg-glass/60 p-1">
+            <div className="hidden sm:flex items-center gap-1 rounded-full border border-line bg-glass/60 p-1">
               <button
                 onClick={() => loginManager("Egreen Quanta Fleet", "manager123")}
-                className={`rounded px-2.5 py-0.5 font-mono text-[10px] transition ${
+                className={`rounded-full px-3 py-1 font-mono text-[10px] transition ${
                   isManager || !user
-                    ? "bg-ember text-void font-bold"
+                    ? "bg-ember text-void font-bold shadow-sm"
                     : "text-mist hover:text-foreground"
                 }`}
                 title="View as Fleet Manager"
@@ -409,9 +428,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 onClick={() => {
                   if (drivers[0]) switchDriverForDemo(drivers[0].id);
                 }}
-                className={`rounded px-2.5 py-0.5 font-mono text-[10px] transition ${
+                className={`rounded-full px-3 py-1 font-mono text-[10px] transition ${
                   isDriver && driverUser?.vehicleIndex === 0
-                    ? "bg-azure text-void font-bold"
+                    ? "bg-foreground text-background font-bold shadow-sm"
                     : "text-mist hover:text-foreground"
                 }`}
                 title="View as Driver 1 (Vehicle #01)"
@@ -422,9 +441,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 onClick={() => {
                   if (drivers[1]) switchDriverForDemo(drivers[1].id);
                 }}
-                className={`rounded px-2.5 py-0.5 font-mono text-[10px] transition ${
+                className={`rounded-full px-3 py-1 font-mono text-[10px] transition ${
                   isDriver && driverUser?.vehicleIndex === 1
-                    ? "bg-azure text-void font-bold"
+                    ? "bg-foreground text-background font-bold shadow-sm"
                     : "text-mist hover:text-foreground"
                 }`}
                 title="View as Driver 2 (Vehicle #02)"
@@ -436,19 +455,35 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             {isManager && (
               <button
                 onClick={() => setShowDriverDb(true)}
-                className="hidden lg:flex items-center gap-1.5 rounded-lg border border-line bg-glass px-2.5 py-1 font-mono text-[11px] text-mist hover:border-ember hover:text-foreground transition"
+                className="hidden lg:flex items-center gap-1.5 rounded-full border border-line bg-glass px-3 py-1 font-mono text-[11px] text-mist hover:border-ember hover:text-foreground transition"
               >
                 <span>Drivers:</span>
                 <span className="font-bold text-ember">{drivers.length}</span>
               </button>
             )}
 
+            {/* Notification bell icon like in Move header */}
+            <div className="relative flex size-9 items-center justify-center rounded-full border border-line bg-glass text-foreground shadow-xs cursor-pointer hover:border-ember transition">
+              <span className="text-sm">🔔</span>
+              <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-ember ring-2 ring-obsidian" />
+            </div>
+
+            {/* User Avatar with verified ring */}
+            <div className="flex items-center gap-2 pl-1">
+              <div className="relative size-9 rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 p-0.5 shadow-sm">
+                <div className="flex size-full items-center justify-center rounded-full bg-obsidian text-xs font-bold text-foreground">
+                  {isDriver ? (driverUser?.driverName?.[0] ?? "D") : "M"}
+                </div>
+                <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-400 ring-2 ring-obsidian" />
+              </div>
+            </div>
+
             <button
               onClick={logout}
-              className="rounded-lg border border-line bg-glass px-2.5 py-1 font-mono text-[11px] text-mist hover:text-rose-400 transition"
+              className="rounded-full border border-line bg-glass px-3 py-1 font-mono text-[11px] text-mist hover:text-rose-400 transition"
               title="Return to App Opening and Intro"
             >
-              🚪 Exit to Intro
+              🚪 Exit
             </button>
           </div>
         </header>

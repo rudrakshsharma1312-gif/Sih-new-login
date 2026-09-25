@@ -30,14 +30,14 @@ interface DriverMetricItem {
   performanceTier: "Fast" | "Balanced" | "High Demand";
 }
 
-// Modern distinct colors for each vehicle bar
+// Modern distinct colors for each vehicle bar - Move. palette
 const BAR_COLORS = [
-  "#ff7a29", // Quanta Ember
+  "#ffd358", // Move. Canary Yellow
+  "#080a0c", // Move. Deep Black
   "#38bdf8", // Sky Azure
   "#10b981", // Emerald
   "#a855f7", // Purple
   "#f59e0b", // Amber
-  "#ec4899", // Rose
   "#6366f1", // Indigo
   "#14b8a6", // Teal
 ];
@@ -147,13 +147,15 @@ export function DriverPerformanceChart() {
   }, [performanceData]);
 
   return (
-    <div className="rounded-2xl border border-line bg-gradient-to-b from-glass to-obsidian p-6 shadow-xl">
+    <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">
       {/* Header and Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="glowdot size-2 rounded-full bg-ember" />
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ember">
+            <span className="flex size-5 items-center justify-center rounded-full bg-ember text-void text-[10px] font-bold">
+              ↗
+            </span>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground font-bold">
               Performance Analytics & SLA Benchmarking
             </p>
           </div>
@@ -169,22 +171,22 @@ export function DriverPerformanceChart() {
         {/* Chart View Controls */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Metric Selector */}
-          <div className="flex rounded-lg border border-line bg-obsidian p-1 font-mono text-xs">
+          <div className="flex rounded-full border border-line bg-obsidian p-1 font-mono text-xs shadow-xs">
             <button
               onClick={() => setActiveMetric("time")}
-              className={`rounded px-2.5 py-1 transition ${
+              className={`rounded-full px-3 py-1 transition cursor-pointer ${
                 activeMetric === "time"
-                  ? "bg-ember text-void font-bold"
+                  ? "bg-ember text-void font-bold shadow-xs"
                   : "text-mist hover:text-foreground"
               }`}
             >
-              ⏱️ Completion Time (min)
+              ⏱️ Time (min)
             </button>
             <button
               onClick={() => setActiveMetric("distance")}
-              className={`rounded px-2.5 py-1 transition ${
+              className={`rounded-full px-3 py-1 transition cursor-pointer ${
                 activeMetric === "distance"
-                  ? "bg-ember text-void font-bold"
+                  ? "bg-ember text-void font-bold shadow-xs"
                   : "text-mist hover:text-foreground"
               }`}
             >
@@ -196,7 +198,7 @@ export function DriverPerformanceChart() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as "vehicle" | "fastest" | "slowest")}
-            className="rounded-lg border border-line bg-obsidian px-2.5 py-1.5 font-mono text-xs text-mist focus:border-ember focus:outline-none"
+            className="rounded-full border border-line bg-obsidian px-3 py-1.5 font-mono text-xs text-foreground focus:border-ember focus:outline-none cursor-pointer"
             aria-label="Sort drivers"
           >
             <option value="vehicle">Sort by Vehicle #</option>
@@ -208,7 +210,7 @@ export function DriverPerformanceChart() {
 
       {/* KPI Stats Summary Grid */}
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-xl border border-line bg-glass/60 p-3">
+        <div className="rounded-2xl border border-line bg-obsidian p-4 shadow-xs">
           <p className="font-mono text-[10px] uppercase text-faint">Fleet Average ETA</p>
           <p className="mt-1 font-display text-2xl font-bold text-foreground">
             {stats.avgTime} <span className="text-xs font-mono text-mist font-normal">mins</span>
@@ -216,9 +218,9 @@ export function DriverPerformanceChart() {
           <p className="mt-0.5 font-mono text-[10px] text-faint">Target SLA: 90 mins max</p>
         </div>
 
-        <div className="rounded-xl border border-line bg-glass/60 p-3">
+        <div className="rounded-2xl border border-line bg-obsidian p-4 shadow-xs">
           <p className="font-mono text-[10px] uppercase text-faint">Fastest Completion</p>
-          <p className="mt-1 font-display text-2xl font-bold text-emerald-400">
+          <p className="mt-1 font-display text-2xl font-bold text-emerald-500">
             {stats.fastest?.completionTimeMin ?? 0}{" "}
             <span className="text-xs font-mono text-mist font-normal">mins</span>
           </p>
@@ -227,7 +229,7 @@ export function DriverPerformanceChart() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-line bg-glass/60 p-3">
+        <div className="rounded-2xl border border-line bg-obsidian p-4 shadow-xs">
           <p className="font-mono text-[10px] uppercase text-faint">Longest Corridor</p>
           <p className="mt-1 font-display text-2xl font-bold text-ember">
             {stats.longest?.completionTimeMin ?? 0}{" "}
@@ -238,7 +240,7 @@ export function DriverPerformanceChart() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-line bg-glass/60 p-3">
+        <div className="rounded-2xl border border-line bg-obsidian p-4 shadow-xs">
           <p className="font-mono text-[10px] uppercase text-faint">Active Drivers</p>
           <p className="mt-1 font-display text-2xl font-bold text-foreground">
             {performanceData.length}{" "}
@@ -251,7 +253,7 @@ export function DriverPerformanceChart() {
       </div>
 
       {/* RECHARTS BAR CHART */}
-      <div className="mt-6 rounded-xl border border-line/60 bg-void/50 p-4">
+      <div className="mt-6 rounded-2xl border border-line bg-obsidian p-4 shadow-xs">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-mono text-[11px] uppercase tracking-wider text-mist">
