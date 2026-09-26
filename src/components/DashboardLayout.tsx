@@ -17,7 +17,8 @@ const MANAGER_NAV = [
   { to: "/optimizer", label: "Optimizer", icon: "⚛️", desc: "QPSO swarm & weights" },
   { to: "/benchmark", label: "Benchmark", icon: "📈", desc: "QPSO vs GA, ACO, QSO" },
   { to: "/fleet", label: "Fleet & Assignments", icon: "🚛", desc: "Driver roster & route mapping" },
-  { to: "/events", label: "Traffic Events", icon: "⚠️", desc: "Accidents & congestion" },
+  { to: "/events", label: "Traffic Events", icon: "⚠️", desc: "Live IoT incident feed" },
+  { to: "/intelligence", label: "Intelligence Hub", icon: "🧠", desc: "ML forecast · SLA · Export" },
 ] as const;
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {

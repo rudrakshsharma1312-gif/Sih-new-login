@@ -92,13 +92,19 @@ function Overview() {
               to="/benchmark"
               className="rounded-full border border-line bg-card px-6 py-3 text-xs font-semibold text-foreground transition-all hover:border-ember shadow-xs"
             >
-              View Algorithm Benchmark
+              Algorithm Benchmark
             </Link>
             <Link
-              to="/fleet"
+              to="/intelligence"
+              className="rounded-full border border-line bg-card px-5 py-3 text-xs font-semibold text-mist hover:text-foreground hover:border-purple-500/50 transition-all shadow-xs"
+            >
+              🧠 Intelligence Hub
+            </Link>
+            <Link
+              to="/events"
               className="rounded-full border border-line bg-card px-5 py-3 text-xs font-semibold text-mist hover:text-foreground transition-all shadow-xs"
             >
-              Fleet Manifest →
+              📡 Live Incidents
             </Link>
           </div>
 
