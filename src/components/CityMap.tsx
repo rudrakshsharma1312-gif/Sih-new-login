@@ -110,8 +110,15 @@ export function CityMap({
   const themeRef = useRef(theme);
   themeRef.current = theme;
 
-  const { networkConfig, activeNodes, destNodeIndex, setPickupHub, setDestinationHub } =
-    useSolver();
+  const {
+    networkConfig,
+    activeNodes,
+    destNodeIndex,
+    setPickupHub,
+    setDestinationHub,
+    scenario,
+    run,
+  } = useSolver();
 
   const [internalPinMode, setInternalPinMode] = useState<"pickup" | "destination" | null>(null);
   const activePinMode = pinMode !== undefined ? pinMode : internalPinMode;
@@ -501,6 +508,25 @@ export function CityMap({
           <span>🔑</span>
           <span>Maps Key</span>
         </button>
+
+        {(scenario.accident || scenario.closure) && (
+          <div className="flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-950/85 px-2.5 py-1 font-mono text-[9px] text-amber-300 backdrop-blur-md shadow">
+            <span className="size-1.5 rounded-full bg-amber-400 animate-ping" />
+            <span className="font-semibold">
+              🚨 {scenario.accident ? "Accident" : ""}
+              {scenario.accident && scenario.closure ? " & " : ""}
+              {scenario.closure ? "Closure" : ""}
+            </span>
+            <button
+              type="button"
+              onClick={() => run()}
+              className="ml-1 rounded border border-amber-500/30 bg-amber-500/20 px-1.5 py-0.5 text-[8px] font-bold uppercase text-amber-200 hover:bg-amber-500/30 transition cursor-pointer"
+              title="Recalculate adaptive bypass routes"
+            >
+              ⚡ Re-route
+            </button>
+          </div>
+        )}
 
         <div className="flex items-center gap-1.5 rounded-md border border-line bg-void/85 px-2.5 py-1 font-mono text-[9px] backdrop-blur-md">
           <span

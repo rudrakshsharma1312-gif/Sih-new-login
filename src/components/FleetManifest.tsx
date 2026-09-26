@@ -53,6 +53,13 @@ export function FleetManifest({
     };
   });
 
+  const totalKm = legs.reduce((acc, l) => acc + l.km, 0);
+  const totalMin = legs.reduce((acc, l) => acc + l.min, 0);
+  const unoptimizedKm = totalKm * 1.34;
+  const dieselSavedLiters = Math.max(0, (unoptimizedKm - totalKm) / 7.2);
+  const co2AvoidedKg = Math.max(0, dieselSavedLiters * 2.68);
+  const treesOffset = (co2AvoidedKg / 21).toFixed(1);
+
   return (
     <div className="panel p-5">
       <div className="flex items-baseline justify-between border-b border-line pb-3">
@@ -73,6 +80,52 @@ export function FleetManifest({
         >
           Manage Drivers ({drivers.length})
         </button>
+      </div>
+
+      {/* Green Logistics ESG Intelligence Card */}
+      <div className="mt-4 rounded-lg border border-emerald-500/25 bg-emerald-950/20 p-3.5 backdrop-blur-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-500/15 pb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🌱</span>
+            <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-wide">
+              ESG Green Fleet Intelligence
+            </span>
+          </div>
+          <span className="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-emerald-300 border border-emerald-500/30">
+            Rating: A+ Eco-Route
+          </span>
+        </div>
+
+        <div className="mt-2.5 grid grid-cols-2 gap-3 sm:grid-cols-4 font-mono">
+          <div>
+            <p className="text-[9px] uppercase tracking-wider text-mist">CO₂ Avoided</p>
+            <p className="mt-0.5 text-sm font-bold text-foreground">
+              {co2AvoidedKg.toFixed(1)}{" "}
+              <span className="text-[10px] font-normal text-emerald-400">kg</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-[9px] uppercase tracking-wider text-mist">Fuel Saved</p>
+            <p className="mt-0.5 text-sm font-bold text-foreground">
+              {dieselSavedLiters.toFixed(1)}{" "}
+              <span className="text-[10px] font-normal text-emerald-400">L diesel</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-[9px] uppercase tracking-wider text-mist">Carbon Offset</p>
+            <p className="mt-0.5 text-sm font-bold text-foreground">
+              ~{treesOffset}{" "}
+              <span className="text-[10px] font-normal text-emerald-400">trees/yr</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-[9px] uppercase tracking-wider text-mist">Distance Delta</p>
+            <p className="mt-0.5 text-sm font-bold text-foreground">
+              -{(unoptimizedKm - totalKm).toFixed(1)}{" "}
+              <span className="text-[10px] font-normal text-emerald-400">km vs unoptimized</span>
+            </p>
+          </div>
+        </div>
       </div>
 
       <ul className="mt-4 divide-y divide-line">

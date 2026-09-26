@@ -155,7 +155,7 @@ export function SolverProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     run();
     return () => cancelAnimationFrame(frame.current);
-  }, [networkConfig]);
+  }, [networkConfig, scenario, params]);
 
   useEffect(() => {
     const t = setInterval(() => {

@@ -338,11 +338,15 @@ export async function saveRouteAssignment(data: {
   };
 
   try {
-    await setDoc(doc(serverDb, "routeAssignments", assignmentId), {
-      ...entity,
-      updatedAt: now,
-      serverUpdated: serverTimestamp(),
-    }, { merge: true });
+    await setDoc(
+      doc(serverDb, "routeAssignments", assignmentId),
+      {
+        ...entity,
+        updatedAt: now,
+        serverUpdated: serverTimestamp(),
+      },
+      { merge: true },
+    );
   } catch (error) {
     console.warn("saveRouteAssignment firestore write failed, returning in-memory entity:", error);
   }

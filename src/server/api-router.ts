@@ -12,11 +12,7 @@ import {
   fetchRouteAssignments,
   saveRouteAssignment,
 } from "./db";
-import {
-  validateCompany,
-  validateDriver,
-  validateRouteAssignment,
-} from "./validation";
+import { validateCompany, validateDriver, validateRouteAssignment } from "./validation";
 import { verifyPassword } from "./crypto";
 
 function corsHeaders(origin = "*"): HeadersInit {
@@ -79,7 +75,11 @@ export async function handleApiRequest(request: Request): Promise<Response> {
       if (method === "GET") {
         const companies = await fetchCompanies();
         const safeCompanies = companies.map(sanitizeCompany);
-        return jsonResponse({ success: true, count: safeCompanies.length, data: safeCompanies }, 200, origin);
+        return jsonResponse(
+          { success: true, count: safeCompanies.length, data: safeCompanies },
+          200,
+          origin,
+        );
       }
 
       if (method === "POST") {
@@ -99,7 +99,12 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         return jsonResponse({ success: true, data: sanitizeCompany(created) }, 201, origin);
       }
 
-      return errorResponse(`Method ${method} not allowed on /api/companies`, 405, undefined, origin);
+      return errorResponse(
+        `Method ${method} not allowed on /api/companies`,
+        405,
+        undefined,
+        origin,
+      );
     }
 
     // /api/companies/:id
@@ -132,7 +137,12 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         return jsonResponse({ success: true, data: sanitizeCompany(updated) }, 200, origin);
       }
 
-      return errorResponse(`Method ${method} not allowed on /api/companies/:id`, 405, undefined, origin);
+      return errorResponse(
+        `Method ${method} not allowed on /api/companies/:id`,
+        405,
+        undefined,
+        origin,
+      );
     }
 
     // ----------------------------------------------------
@@ -143,7 +153,11 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         const rawDrivers = await fetchDrivers();
         // Redact passwords from client responses
         const safeDrivers = rawDrivers.map(sanitizeDriver);
-        return jsonResponse({ success: true, count: safeDrivers.length, data: safeDrivers }, 200, origin);
+        return jsonResponse(
+          { success: true, count: safeDrivers.length, data: safeDrivers },
+          200,
+          origin,
+        );
       }
 
       if (method === "POST") {
@@ -190,7 +204,12 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         const patchPayload = body as Record<string, unknown>;
         const updated = await updateDriver(driverId, patchPayload);
         if (!updated) {
-          return errorResponse(`Driver with id '${driverId}' not found or update failed`, 404, undefined, origin);
+          return errorResponse(
+            `Driver with id '${driverId}' not found or update failed`,
+            404,
+            undefined,
+            origin,
+          );
         }
         return jsonResponse({ success: true, data: sanitizeDriver(updated) }, 200, origin);
       }
@@ -200,7 +219,12 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         return jsonResponse({ success, id: driverId }, 200, origin);
       }
 
-      return errorResponse(`Method ${method} not allowed on /api/drivers/:id`, 405, undefined, origin);
+      return errorResponse(
+        `Method ${method} not allowed on /api/drivers/:id`,
+        405,
+        undefined,
+        origin,
+      );
     }
 
     // ----------------------------------------------------
@@ -209,7 +233,11 @@ export async function handleApiRequest(request: Request): Promise<Response> {
     if (pathname === "/api/route-assignments" || pathname === "/api/route-assignments/") {
       if (method === "GET") {
         const assignments = await fetchRouteAssignments();
-        return jsonResponse({ success: true, count: assignments.length, data: assignments }, 200, origin);
+        return jsonResponse(
+          { success: true, count: assignments.length, data: assignments },
+          200,
+          origin,
+        );
       }
 
       if (method === "POST" || method === "PUT") {
@@ -229,7 +257,12 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         return jsonResponse({ success: true, data: saved }, 200, origin);
       }
 
-      return errorResponse(`Method ${method} not allowed on /api/route-assignments`, 405, undefined, origin);
+      return errorResponse(
+        `Method ${method} not allowed on /api/route-assignments`,
+        405,
+        undefined,
+        origin,
+      );
     }
 
     // ----------------------------------------------------
@@ -243,11 +276,17 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         return errorResponse("Invalid JSON payload", 400, undefined, origin);
       }
 
-      const identifier = typeof body.identifier === "string" ? body.identifier.trim().toLowerCase() : "";
+      const identifier =
+        typeof body.identifier === "string" ? body.identifier.trim().toLowerCase() : "";
       const password = typeof body.password === "string" ? body.password.trim() : "";
 
       if (!identifier || !password) {
-        return errorResponse("Company name/manager name and password required", 400, undefined, origin);
+        return errorResponse(
+          "Company name/manager name and password required",
+          400,
+          undefined,
+          origin,
+        );
       }
 
       if (password.length < 4) {
@@ -255,12 +294,13 @@ export async function handleApiRequest(request: Request): Promise<Response> {
       }
 
       const companies = await fetchCompanies();
-      const matchedCompany = companies.find(
-        (c) =>
-          c.companyName.toLowerCase().includes(identifier) ||
-          c.managerName.toLowerCase().includes(identifier) ||
-          (c.mobile && c.mobile.includes(identifier)),
-      ) ?? companies[0];
+      const matchedCompany =
+        companies.find(
+          (c) =>
+            c.companyName.toLowerCase().includes(identifier) ||
+            c.managerName.toLowerCase().includes(identifier) ||
+            (c.mobile && c.mobile.includes(identifier)),
+        ) ?? companies[0];
 
       if (matchedCompany?.password && !verifyPassword(password, matchedCompany.password)) {
         return errorResponse("Incorrect password for this manager account", 401, undefined, origin);
@@ -298,10 +338,17 @@ export async function handleApiRequest(request: Request): Promise<Response> {
       }
 
       const drivers = await fetchDrivers();
-      const matchedDriver = drivers.find((d) => d.mobileNo.replace(/\D/g, "") === cleanMobile || d.mobileNo.includes(cleanMobile));
+      const matchedDriver = drivers.find(
+        (d) => d.mobileNo.replace(/\D/g, "") === cleanMobile || d.mobileNo.includes(cleanMobile),
+      );
 
       if (!matchedDriver) {
-        return errorResponse(`No driver registered with mobile number ${rawMobile}`, 404, undefined, origin);
+        return errorResponse(
+          `No driver registered with mobile number ${rawMobile}`,
+          404,
+          undefined,
+          origin,
+        );
       }
 
       // Verify password server-side using secure hash verification

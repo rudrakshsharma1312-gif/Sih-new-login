@@ -133,6 +133,7 @@ const PROFILES: Record<AlgorithmId, Profile> = {
   qpso: { attraction: 0.34, mutation: 0.22, tolerance: 0.1, refine: 12, speed: 1 },
   ga: { attraction: 0.2, mutation: 0.18, tolerance: 0.04, refine: 1, speed: 2.3 },
   aco: { attraction: 0.16, mutation: 0.12, tolerance: 0.02, refine: 0, speed: 2.8 },
+  qso: { attraction: 0.28, mutation: 0.24, tolerance: 0.12, refine: 6, speed: 1.5 },
   sa: { attraction: 0.06, mutation: 0.3, tolerance: 0.18, refine: 0, speed: 3.4 },
 };
 

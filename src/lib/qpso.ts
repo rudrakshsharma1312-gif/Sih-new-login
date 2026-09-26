@@ -203,13 +203,13 @@ export function computeMeanBest(
   for (let i = 0; i < M; i++) {
     const pBest = particles[i]!.pBestPosition;
     for (let d = 0; d < dimension; d++) {
-      mbest[d] += pBest[d]!;
+      mbest[d] = (mbest[d] ?? 0) + (pBest[d] ?? 0);
     }
   }
 
   const invM = 1 / M;
   for (let d = 0; d < dimension; d++) {
-    mbest[d] *= invM;
+    mbest[d] = (mbest[d] ?? 0) * invM;
   }
   return mbest;
 }

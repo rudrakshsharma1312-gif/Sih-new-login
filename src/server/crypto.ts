@@ -14,7 +14,7 @@ export function hashPassword(password: string): string {
 /**
  * Verify a plain-text password against a stored hashed password.
  * Supports legacy unhashed strings for backward-compatibility with demo/seed records.
- * 
+ *
  * SECURITY WARNING: The fallback passwords ("driver123", "manager123") are enabled for demo purposes.
  * In production, set DISABLE_AUTH_FALLBACKS=true to enforce strict password verification.
  */
@@ -37,7 +37,7 @@ export function verifyPassword(password: string, storedHash?: string): boolean {
 
   // Only allow fallback passwords in development/demo mode
   const allowFallbacks = process.env.DISABLE_AUTH_FALLBACKS !== "true";
-  
+
   if (allowFallbacks) {
     // Backward compatibility fallback for pre-existing demo entries
     return password === storedHash || password === "driver123" || password === "manager123";
