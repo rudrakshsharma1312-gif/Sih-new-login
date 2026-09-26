@@ -1,6 +1,6 @@
 import { ALGORITHM_META, type AlgorithmId, type Run } from "@/lib/optimizer";
 
-const ORDER: AlgorithmId[] = ["qpso", "ga", "aco", "sa"];
+const ORDER: AlgorithmId[] = ["qpso", "ga", "aco", "qso", "sa"];
 
 export function BenchmarkTable({ runs }: { runs: Partial<Record<AlgorithmId, Run>> }) {
   const base = runs.qpso;

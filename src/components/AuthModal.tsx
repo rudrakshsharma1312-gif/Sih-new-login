@@ -54,6 +54,9 @@ export function AuthModal({ isOpen, onClose, defaultTab = "manager-login" }: Aut
   const [singleDriverCompany, setSingleDriverCompany] = useState(
     company?.companyName ?? "Egreen Quanta Fleet",
   );
+  const [singleDriverManager, setSingleDriverManager] = useState(
+    company?.managerName ?? "Dr. Rajesh Sharma",
+  );
 
   const handleDriverCountChange = (count: number) => {
     const validCount = Math.max(1, Math.min(10, count));
@@ -136,6 +139,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "manager-login" }: Aut
       mobileNo: singleDriverMobile,
       password: singleDriverPassword,
       companyName: singleDriverCompany,
+      managerName: singleDriverManager,
     });
     setLoading(false);
     if (!res.success) {
@@ -579,6 +583,19 @@ export function AuthModal({ isOpen, onClose, defaultTab = "manager-login" }: Aut
                 value={singleDriverCompany}
                 onChange={(e) => setSingleDriverCompany(e.target.value)}
                 placeholder="e.g. Egreen Quanta Fleet"
+                className="mt-1 w-full rounded-lg border border-line bg-void/70 px-3 py-2 text-sm text-foreground focus:border-ember focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-mist">
+                Reporting Fleet Manager *
+              </label>
+              <input
+                type="text"
+                required
+                value={singleDriverManager}
+                onChange={(e) => setSingleDriverManager(e.target.value)}
+                placeholder="e.g. Dr. Rajesh Sharma"
                 className="mt-1 w-full rounded-lg border border-line bg-void/70 px-3 py-2 text-sm text-foreground focus:border-ember focus:outline-none"
               />
             </div>

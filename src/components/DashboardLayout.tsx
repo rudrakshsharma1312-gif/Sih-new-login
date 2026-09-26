@@ -15,7 +15,7 @@ interface DashboardLayoutProps {
 const MANAGER_NAV = [
   { to: "/", label: "Overview", icon: "🛰️", desc: "Live multi-vehicle map" },
   { to: "/optimizer", label: "Optimizer", icon: "⚛️", desc: "QPSO swarm & weights" },
-  { to: "/benchmark", label: "Benchmark", icon: "📈", desc: "QPSO vs GA, ACO, SA" },
+  { to: "/benchmark", label: "Benchmark", icon: "📈", desc: "QPSO vs GA, ACO, QSO" },
   { to: "/fleet", label: "Fleet & Assignments", icon: "🚛", desc: "Driver roster & route mapping" },
   { to: "/events", label: "Traffic Events", icon: "⚠️", desc: "Accidents & congestion" },
 ] as const;
@@ -145,8 +145,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
               <p className="truncate font-mono text-[10px] text-mist">
                 {isDriver
-                  ? `${driverUser?.mobileNo} · ${driverUser?.companyName}`
-                  : (company?.companyName ?? "Egreen Quanta Fleet")}
+                  ? `${driverUser?.mobileNo} · ${driverUser?.companyName} · Mgr: ${driverUser?.managerName || "Assigned"}`
+                  : `${(user as { companyName?: string })?.companyName ?? company?.companyName ?? "Egreen Quanta Fleet"} · Mgr: ${(user as { managerName?: string })?.managerName ?? company?.managerName ?? "Manager"}`}
               </p>
             </div>
           </div>

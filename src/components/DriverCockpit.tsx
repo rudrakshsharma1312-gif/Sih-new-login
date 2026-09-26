@@ -109,9 +109,14 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
                   </span>
                 </div>
                 <p className="font-mono text-[10px] text-mist">
-                  {driver.companyName} · Driver:{" "}
-                  <strong className="text-foreground">{driver.driverName}</strong> (
-                  {driver.mobileNo})
+                  Fleet:{" "}
+                  <span className="text-foreground font-semibold">{currentDriver.companyName}</span>{" "}
+                  · Manager:{" "}
+                  <span className="text-ember font-semibold">
+                    {currentDriver.managerName || "Fleet Manager"}
+                  </span>{" "}
+                  · Driver: <strong className="text-foreground">{currentDriver.driverName}</strong>{" "}
+                  ({currentDriver.mobileNo})
                 </p>
               </div>
             </div>

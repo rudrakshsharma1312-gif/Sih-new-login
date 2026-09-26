@@ -5,7 +5,7 @@ type Props = {
   progress: number;
 };
 
-const ORDER: AlgorithmId[] = ["sa", "aco", "ga", "qpso"];
+const ORDER: AlgorithmId[] = ["sa", "qso", "aco", "ga", "qpso"];
 
 export function ConvergenceChart({ runs, progress }: Props) {
   const series = ORDER.map((id) => ({ id, run: runs[id] })).filter((s) => s.run);

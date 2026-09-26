@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ControlRail } from "@/components/ControlRail";
 import { ConvergenceChart } from "@/components/ConvergenceChart";
+import { HubSelectorBar } from "@/components/HubSelectorBar";
 import { PageHead } from "@/components/Shell";
 import { useSolver } from "@/lib/solver";
 
@@ -74,6 +75,7 @@ function OptimizerPage() {
         title="Tune the swarm, watch it converge"
         aside="α β γ δ TUNABLE"
       />
+      <HubSelectorBar className="mb-4" />
       <div className="grid gap-4 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <ControlRail
@@ -101,6 +103,36 @@ function OptimizerPage() {
               </div>
             ))}
           </div>
+
+          {qpso?.diagnostics && (
+            <div className="panel flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 font-mono text-[11px] text-faint">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-ember animate-pulse" />
+                <span className="text-foreground font-semibold">
+                  QPSO Delta-Potential Wave Engine Active
+                </span>
+                <span>·</span>
+                <span>Schrödinger Equation Monte Carlo Sampling</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span>
+                  Quantum Tunneling:{" "}
+                  <span className="text-ember font-bold">
+                    {qpso.diagnostics.tunnelEvents} jumps
+                  </span>
+                </span>
+                <span>
+                  Wave Dispersion:{" "}
+                  <span className="text-ember font-bold">
+                    {qpso.diagnostics.meanWavePacketWidth.toFixed(2)}
+                  </span>
+                </span>
+                <span>
+                  CE α Rate: <span className="text-ember font-bold">0.98 → 0.45</span>
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

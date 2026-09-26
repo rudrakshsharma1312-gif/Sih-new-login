@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CityMap } from "@/components/CityMap";
 import { DriverPerformanceChart } from "@/components/DriverPerformanceChart";
+import { HubSelectorBar } from "@/components/HubSelectorBar";
 import { routeLabel } from "@/lib/optimizer";
 import { useSolver } from "@/lib/solver";
 
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "QUANTA solves multi-vehicle routing across the Bengaluru road network with quantum-inspired particle swarm optimization, benchmarked live against GA, ACO and SA.",
+          "QUANTA solves multi-vehicle routing across the Bengaluru road network with quantum-inspired particle swarm optimization, benchmarked live against GA, ACO and QSO.",
       },
       {
         property: "og:title",
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Live fleet routing command centre: QPSO vs GA, ACO and SA on the Bengaluru road graph.",
+          "Live fleet routing command centre: QPSO vs GA, ACO and QSO on the Bengaluru road graph.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/")({
 
 function Overview() {
   const { runs, progress, params, clock } = useSolver();
+  const [pinMode, setPinMode] = useState<"pickup" | "destination" | null>(null);
   const qpso = runs.qpso;
   const ga = runs.ga;
 
@@ -43,6 +45,13 @@ function Overview() {
 
   return (
     <section className="space-y-8 pb-16 pt-2">
+      {/* Dynamic Pick-up Base & Destination Manager Bar */}
+      <HubSelectorBar
+        activePinMode={pinMode}
+        onStartMapPinPick={(target) => setPinMode(target)}
+        onCancelPinMode={() => setPinMode(null)}
+      />
+
       {/* Top Banner / Hero Grid - Move. styled */}
       <div className="grid items-center gap-8 lg:grid-cols-12">
         <div className="lg:col-span-6 space-y-6">
@@ -69,7 +78,7 @@ function Overview() {
           <p className="max-w-lg text-sm leading-relaxed text-mist">
             Autonomous multi-vehicle route optimization across the live Bengaluru road graph.
             Quantum-inspired particles tunnel through congestion bottlenecks, benchmarked live
-            against GA, ACO and Simulated Annealing.
+            against GA, ACO and Quantum Swarm Optimization (QSO).
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -138,6 +147,8 @@ function Overview() {
             <CityMap
               routes={revealedRoutes}
               {...(ga ? { ghostRoutes: ga.best.routes } : {})}
+              pinMode={pinMode}
+              onPinModeChange={setPinMode}
               className="aspect-[4/3] w-full rounded-2xl"
             />
 

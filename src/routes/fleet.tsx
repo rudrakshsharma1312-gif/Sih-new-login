@@ -4,6 +4,7 @@ import { CityMap } from "@/components/CityMap";
 import { FleetManifest } from "@/components/FleetManifest";
 import { DriverAssignmentPanel } from "@/components/DriverAssignmentPanel";
 import { DriverPerformanceChart } from "@/components/DriverPerformanceChart";
+import { HubSelectorBar } from "@/components/HubSelectorBar";
 import { PageHead } from "@/components/Shell";
 import { useSolver } from "@/lib/solver";
 
@@ -83,6 +84,8 @@ function FleetPage() {
           </button>
         </div>
       </div>
+
+      <HubSelectorBar className="mt-4" />
 
       {/* Conditionally rendered view based on active tab */}
       {activeTab === "assignment" ? (

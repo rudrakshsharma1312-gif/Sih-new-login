@@ -27,6 +27,8 @@ interface DriverMetricItem {
   completionTimeMin: number;
   payloadPackages: number;
   isCustom: boolean;
+  companyName: string;
+  managerName: string;
   performanceTier: "Fast" | "Balanced" | "High Demand";
 }
 
@@ -102,6 +104,8 @@ export function DriverPerformanceChart() {
         completionTimeMin: roundedTime,
         payloadPackages,
         isCustom,
+        companyName: driver.companyName,
+        managerName: driver.managerName || "Fleet Manager",
         performanceTier,
       };
     });
@@ -308,6 +312,14 @@ export function DriverPerformanceChart() {
                       </div>
                       <div className="mt-2 space-y-1 font-mono text-[11px]">
                         <p className="flex justify-between gap-4 text-mist">
+                          <span>Fleet Company:</span>
+                          <strong className="text-foreground">{item.companyName}</strong>
+                        </p>
+                        <p className="flex justify-between gap-4 text-mist">
+                          <span>Manager:</span>
+                          <strong className="text-ember">{item.managerName}</strong>
+                        </p>
+                        <p className="flex justify-between gap-4 text-mist">
                           <span>Est. Completion Time:</span>
                           <strong className="text-foreground">{item.completionTimeMin} mins</strong>
                         </p>
@@ -373,6 +385,7 @@ export function DriverPerformanceChart() {
               <tr>
                 <th className="px-4 py-2">Vehicle</th>
                 <th className="px-4 py-2">Driver Name</th>
+                <th className="px-4 py-2">Manager</th>
                 <th className="px-4 py-2">Mobile</th>
                 <th className="px-4 py-2">Route Mode</th>
                 <th className="px-4 py-2">Stops</th>
@@ -386,6 +399,11 @@ export function DriverPerformanceChart() {
                 <tr key={d.id} className="transition hover:bg-glass/30">
                   <td className="px-4 py-2.5 font-bold text-ember">{d.vehicleLabel}</td>
                   <td className="px-4 py-2.5 font-medium text-foreground">{d.driverName}</td>
+                  <td className="px-4 py-2.5 text-ember">
+                    <span className="rounded bg-glasshi px-1.5 py-0.5 text-[10px] border border-line/60">
+                      {d.managerName}
+                    </span>
+                  </td>
                   <td className="px-4 py-2.5 text-mist">{d.mobileNo}</td>
                   <td className="px-4 py-2.5">
                     <span

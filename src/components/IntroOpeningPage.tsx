@@ -52,6 +52,9 @@ export function IntroOpeningPage() {
   const [singleDriverCompany, setSingleDriverCompany] = useState(
     company?.companyName ?? "Egreen Quanta Fleet",
   );
+  const [singleDriverManager, setSingleDriverManager] = useState(
+    company?.managerName ?? "Dr. Rajesh Sharma",
+  );
 
   const handleDriverCountChange = (count: number) => {
     const validCount = Math.max(1, Math.min(10, count));
@@ -142,6 +145,7 @@ export function IntroOpeningPage() {
       mobileNo: singleDriverMobile,
       password: singleDriverPassword,
       companyName: singleDriverCompany,
+      managerName: singleDriverManager,
     });
     setLoading(false);
     if (!res.success) {
@@ -253,7 +257,7 @@ export function IntroOpeningPage() {
               <div className="rounded-xl border border-line bg-glass/40 p-3">
                 <p className="font-display text-xl font-bold text-emerald-400">4 Heuristics</p>
                 <p className="mt-0.5 font-mono text-[10px] uppercase text-mist">
-                  QPSO vs GA/ACO/SA
+                  QPSO vs GA/ACO/QSO
                 </p>
               </div>
             </div>
@@ -607,6 +611,20 @@ export function IntroOpeningPage() {
                       required
                       value={singleDriverCompany}
                       onChange={(e) => setSingleDriverCompany(e.target.value)}
+                      className="w-full rounded-xl border border-line bg-void/80 px-4 py-2 text-sm text-foreground focus:border-ember focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-xs text-mist mb-1">
+                      Reporting Fleet Manager
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={singleDriverManager}
+                      onChange={(e) => setSingleDriverManager(e.target.value)}
+                      placeholder="e.g. Dr. Rajesh Sharma"
                       className="w-full rounded-xl border border-line bg-void/80 px-4 py-2 text-sm text-foreground focus:border-ember focus:outline-none"
                     />
                   </div>
