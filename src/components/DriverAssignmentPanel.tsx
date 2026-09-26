@@ -216,12 +216,14 @@ export function DriverAssignmentPanel() {
 
   // Filter stored locations list
   const filteredNodes = useMemo(() => {
-    return ALL_NODES.slice(1).filter((node) => {
-      const matchesSearch = node.name.toLowerCase().includes(searchFilter.toLowerCase());
-      const region = REGION_MAP[node.id] ?? "Other";
-      const matchesRegion = selectedRegion === "All" || region === selectedRegion;
-      return matchesSearch && matchesRegion;
-    });
+    return ALL_NODES.slice(1)
+      .map((node, idx) => ({ ...node, nodeIndex: idx + 1 }))
+      .filter((node) => {
+        const matchesSearch = node.name.toLowerCase().includes(searchFilter.toLowerCase());
+        const region = REGION_MAP[node.nodeIndex] ?? "Other";
+        const matchesRegion = selectedRegion === "All" || region === selectedRegion;
+        return matchesSearch && matchesRegion;
+      });
   }, [searchFilter, selectedRegion]);
 
   return (
@@ -548,8 +550,8 @@ export function DriverAssignmentPanel() {
                 {/* Stored Location Cards Grid */}
                 <div className="mt-3 grid max-h-[220px] grid-cols-2 gap-2 overflow-y-auto pr-1 sm:grid-cols-3 md:grid-cols-4">
                   {filteredNodes.map((node) => {
-                    const isAlreadyInRoute = draftRoute.includes(node.id);
-                    const region = REGION_MAP[node.id] ?? "Other";
+                    const isAlreadyInRoute = draftRoute.includes(node.nodeIndex);
+                    const region = REGION_MAP[node.nodeIndex] ?? "Other";
 
                     return (
                       <div
@@ -576,7 +578,7 @@ export function DriverAssignmentPanel() {
 
                         <button
                           type="button"
-                          onClick={() => handleAddLocation(node.id)}
+                          onClick={() => handleAddLocation(node.nodeIndex)}
                           className="mt-2 w-full rounded bg-obsidian py-1 font-mono text-[10px] text-ember hover:bg-ember hover:text-void transition"
                         >
                           + Add to Route

@@ -1,15 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { collection, doc, getDocs, setDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "./firebase";
+import { apiClient, type CompanyModel, type DriverModel } from "./api-client";
 
-export interface Company {
-  id: string;
-  companyName: string;
-  managerName: string;
-  mobile?: string;
-  driverCount: number;
-  createdAt: string;
-}
+export type Company = CompanyModel;
 
 export interface DriverUser {
   id: string;
@@ -20,6 +12,7 @@ export interface DriverUser {
   companyName: string;
   vehicleIndex: number;
   customRoute?: number[];
+  assignedRoute?: string;
   status?: "Active" | "En Route" | "Standby";
   createdAt: string;
 }
@@ -40,6 +33,8 @@ interface AuthContextType {
   company: Company | null;
   drivers: DriverUser[];
   loading: boolean;
+  isSyncing: boolean;
+  apiError: string | null;
   loginManager: (
     companyOrManager: string,
     pass: string,
@@ -68,6 +63,7 @@ interface AuthContextType {
   removeDriver: (driverId: string) => Promise<void>;
   logout: () => void;
   switchDriverForDemo: (driverId: string) => void;
+  refreshFromApi: () => Promise<void>;
 }
 
 const STORAGE_SESSION_KEY = "quanta_auth_user";
@@ -90,7 +86,6 @@ const SEED_DRIVERS: DriverUser[] = [
     role: "driver",
     driverName: "Ramesh Gowda",
     mobileNo: "9845012345",
-    password: "driver123",
     companyName: "Egreen Quanta Fleet",
     vehicleIndex: 0,
     status: "En Route",
@@ -101,7 +96,6 @@ const SEED_DRIVERS: DriverUser[] = [
     role: "driver",
     driverName: "Suresh Patil",
     mobileNo: "9845023456",
-    password: "driver123",
     companyName: "Egreen Quanta Fleet",
     vehicleIndex: 1,
     status: "En Route",
@@ -112,7 +106,6 @@ const SEED_DRIVERS: DriverUser[] = [
     role: "driver",
     driverName: "Ananya Sharma",
     mobileNo: "9845034567",
-    password: "driver123",
     companyName: "Egreen Quanta Fleet",
     vehicleIndex: 2,
     status: "En Route",
@@ -123,7 +116,6 @@ const SEED_DRIVERS: DriverUser[] = [
     role: "driver",
     driverName: "Deepak Rao",
     mobileNo: "9845045678",
-    password: "driver123",
     companyName: "Egreen Quanta Fleet",
     vehicleIndex: 3,
     status: "Standby",
@@ -134,7 +126,6 @@ const SEED_DRIVERS: DriverUser[] = [
     role: "driver",
     driverName: "Mohammed Farooq",
     mobileNo: "9845056789",
-    password: "driver123",
     companyName: "Egreen Quanta Fleet",
     vehicleIndex: 4,
     status: "Standby",
@@ -149,11 +140,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [company, setCompany] = useState<Company | null>(SEED_COMPANY);
   const [drivers, setDrivers] = useState<DriverUser[]>(SEED_DRIVERS);
   const [loading, setLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  // Initialize from cache and sync with Firestore
+  // Initialize from cache and sync with REST API
+  const refreshFromApi = async () => {
+    setIsSyncing(true);
+    setApiError(null);
+    try {
+      const [driversRes, companiesRes] = await Promise.all([
+        apiClient.drivers.getAll(),
+        apiClient.companies.getAll(),
+      ]);
+
+      if (driversRes.success && driversRes.data && driversRes.data.length > 0) {
+        const loaded: DriverUser[] = driversRes.data.map((d: DriverModel) => ({
+          id: d.id,
+          role: "driver",
+          driverName: d.driverName,
+          mobileNo: d.mobileNo,
+          companyName: d.companyName,
+          vehicleIndex: d.vehicleIndex,
+          customRoute: d.customRoute,
+          assignedRoute: d.assignedRoute,
+          status: d.status ?? "Active",
+          createdAt: d.createdAt,
+        }));
+        setDrivers(loaded);
+        localStorage.setItem(STORAGE_DRIVERS_KEY, JSON.stringify(loaded));
+      } else if (!driversRes.success) {
+        setApiError(driversRes.error ?? "Failed to fetch drivers from API");
+      }
+
+      if (companiesRes.success && companiesRes.data && companiesRes.data.length > 0) {
+        setCompany(companiesRes.data[0]!);
+        localStorage.setItem(STORAGE_COMPANIES_KEY, JSON.stringify(companiesRes.data[0]));
+      } else if (!companiesRes.success) {
+        setApiError(companiesRes.error ?? "Failed to fetch companies from API");
+      }
+    } catch (err) {
+      console.warn("API sync error, using cached data:", err);
+      setApiError(err instanceof Error ? err.message : "API connection failed");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   useEffect(() => {
-    let active = true;
-
     try {
       const storedUser = localStorage.getItem(STORAGE_SESSION_KEY);
       if (storedUser) {
@@ -169,66 +202,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (e) {
       console.error("Local storage load error:", e);
+    } finally {
+      setLoading(false);
     }
 
-    // Remote sync from Firestore
-    async function syncRemote() {
-      try {
-        const dSnap = await getDocs(collection(db, "drivers"));
-        if (!dSnap.empty && active) {
-          const loaded: DriverUser[] = [];
-          dSnap.forEach((docSnap) => {
-            const data = docSnap.data();
-            loaded.push({
-              id: docSnap.id,
-              role: "driver",
-              driverName: data.driverName ?? "Driver",
-              mobileNo: data.mobileNo ?? "",
-              password: data.password ?? "driver123",
-              companyName: data.companyName ?? "Egreen Quanta Fleet",
-              vehicleIndex: data.vehicleIndex ?? 0,
-              customRoute: Array.isArray(data.customRoute) ? data.customRoute : undefined,
-              status: data.status ?? "En Route",
-              createdAt: data.createdAt ?? new Date().toISOString(),
-            });
-          });
-          if (loaded.length > 0) {
-            setDrivers(loaded);
-            localStorage.setItem(STORAGE_DRIVERS_KEY, JSON.stringify(loaded));
-          }
-        }
-
-        const cSnap = await getDocs(collection(db, "companies"));
-        if (!cSnap.empty && active) {
-          const compDocs: Company[] = [];
-          cSnap.forEach((docSnap) => {
-            const data = docSnap.data();
-            compDocs.push({
-              id: docSnap.id,
-              companyName: data.companyName ?? "Egreen Quanta Fleet",
-              managerName: data.managerName ?? "Manager",
-              mobile: data.mobile ?? "",
-              driverCount: data.driverCount ?? 5,
-              createdAt: data.createdAt ?? new Date().toISOString(),
-            });
-          });
-          if (compDocs.length > 0 && compDocs[0]) {
-            setCompany(compDocs[0]);
-            localStorage.setItem(STORAGE_COMPANIES_KEY, JSON.stringify(compDocs[0]));
-          }
-        }
-      } catch (err) {
-        console.warn("Firestore sync skipped / using local fallback:", err);
-      } finally {
-        if (active) setLoading(false);
-      }
-    }
-
-    syncRemote();
-
-    return () => {
-      active = false;
-    };
+    refreshFromApi();
   }, []);
 
   const persistUser = (nextUser: AuthUser | null) => {
@@ -241,21 +219,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const loginManager = async (companyOrManager: string, pass: string) => {
-    const term = companyOrManager.trim().toLowerCase();
+    const term = companyOrManager.trim();
     if (!term || !pass) {
       return { success: false, error: "Please provide company/manager name and password." };
     }
 
-    // Check against seed / active company or stored manager
-    const matchedCompany =
-      company?.companyName.toLowerCase().includes(term) ||
-      company?.managerName.toLowerCase().includes(term) ||
-      company?.mobile?.includes(term);
-
-    // Any valid password or default manager password
     if (pass.length < 4) {
       return { success: false, error: "Password must be at least 4 characters." };
     }
+
+    try {
+      const res = await apiClient.auth.loginManager(term, pass);
+      if (res.success && res.data) {
+        const mgrUser = res.data.user as ManagerUser;
+        persistUser(mgrUser);
+        return { success: true };
+      }
+      if (res.error) {
+        return { success: false, error: res.error };
+      }
+    } catch {
+      // Fallback in case of server connectivity issue
+    }
+
+    // Fallback against local state
+    const matchedCompany =
+      company?.companyName.toLowerCase().includes(term.toLowerCase()) ||
+      company?.managerName.toLowerCase().includes(term.toLowerCase()) ||
+      company?.mobile?.includes(term);
 
     const managerUser: ManagerUser = {
       id: `mgr-${Date.now()}`,
@@ -279,6 +270,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: false, error: "Please enter your password." };
     }
 
+    try {
+      const res = await apiClient.auth.loginDriver(mobileNo, pass);
+      if (res.success && res.data) {
+        const drv = res.data.user as DriverUser;
+        persistUser(drv);
+        return { success: true };
+      }
+      if (res.error) {
+        return { success: false, error: res.error };
+      }
+    } catch {
+      // Fallback
+    }
+
+    // Local fallback
     const found = drivers.find(
       (d) => d.mobileNo.replace(/\D/g, "") === cleanMobile || d.mobileNo.includes(cleanMobile),
     );
@@ -286,12 +292,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!found) {
       return {
         success: false,
-        error: `No driver found registered with mobile number ${mobileNo}. Please check or contact your fleet manager.`,
+        error: `No driver found registered with mobile number ${mobileNo}. Please check with fleet manager.`,
       };
-    }
-
-    if (found.password && found.password !== pass && pass !== "driver123") {
-      return { success: false, error: "Incorrect password for this driver account." };
     }
 
     persistUser(found);
@@ -320,20 +322,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       createdAt: new Date().toISOString(),
     };
 
-    // Build the drivers list according to no. of drivers entered
     const newDriversList: DriverUser[] = data.drivers.map((drv, idx) => ({
       id: `drv-${Date.now()}-${idx}`,
       role: "driver",
       driverName: drv.driverName.trim() || `Driver #${idx + 1}`,
       mobileNo: drv.mobileNo.trim() || `98450${10000 + idx}`,
-      password: drv.password.trim() || "driver123",
       companyName: data.companyName.trim(),
       vehicleIndex: idx,
       status: "Active",
       createdAt: new Date().toISOString(),
     }));
 
-    // Update local state and storage
     setCompany(newCompany);
     setDrivers(newDriversList);
     localStorage.setItem(STORAGE_COMPANIES_KEY, JSON.stringify(newCompany));
@@ -349,20 +348,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     persistUser(managerUser);
 
-    // Sync to Firestore in background
-    try {
-      await setDoc(doc(db, "companies", companyId), {
-        ...newCompany,
-        serverCreated: serverTimestamp(),
-      });
-      for (const drv of newDriversList) {
-        await setDoc(doc(db, "drivers", drv.id), {
-          ...drv,
-          serverCreated: serverTimestamp(),
-        });
-      }
-    } catch (err) {
-      console.warn("Firestore background write fallback:", err);
+    // Call REST API in background
+    apiClient.companies.create(newCompany).catch(console.warn);
+    for (const drv of data.drivers) {
+      apiClient.drivers
+        .create({
+          driverName: drv.driverName,
+          mobileNo: drv.mobileNo,
+          password: drv.password,
+          companyName: data.companyName,
+        })
+        .catch(console.warn);
     }
 
     return { success: true };
@@ -375,8 +371,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     companyName: string;
     vehicleIndex?: number;
   }) => {
-    if (!data.driverName.trim() || !data.mobileNo.trim() || !data.password.trim()) {
-      return { success: false, error: "Driver name, mobile number, and password are required." };
+    if (!data.driverName.trim() || !data.mobileNo.trim()) {
+      return { success: false, error: "Driver name and mobile number are required." };
     }
 
     const assignedIdx = typeof data.vehicleIndex === "number" ? data.vehicleIndex : drivers.length;
@@ -386,7 +382,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       role: "driver",
       driverName: data.driverName.trim(),
       mobileNo: data.mobileNo.trim(),
-      password: data.password.trim(),
       companyName: data.companyName.trim() || (company?.companyName ?? "Egreen Quanta Fleet"),
       vehicleIndex: assignedIdx,
       status: "Active",
@@ -397,21 +392,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setDrivers(updatedDrivers);
     localStorage.setItem(STORAGE_DRIVERS_KEY, JSON.stringify(updatedDrivers));
 
-    // Update company driver count
     if (company) {
       const updatedCompany = { ...company, driverCount: updatedDrivers.length };
       setCompany(updatedCompany);
       localStorage.setItem(STORAGE_COMPANIES_KEY, JSON.stringify(updatedCompany));
     }
 
-    // Persist to Firestore
-    try {
-      await setDoc(doc(db, "drivers", newDriver.id), {
-        ...newDriver,
-        serverCreated: serverTimestamp(),
-      });
-    } catch (err) {
-      console.warn("Firestore save driver warning:", err);
+    // Call REST API
+    const res = await apiClient.drivers.create({
+      ...data,
+      id: newDriver.id,
+      vehicleIndex: assignedIdx,
+    });
+
+    if (!res.success && res.error) {
+      return { success: false, error: res.error };
     }
 
     return { success: true };
@@ -437,34 +432,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       persistUser(updatedDriver);
     }
 
+    // Call REST API for driver update and route assignment
     try {
-      await setDoc(
-        doc(db, "drivers", driverId),
-        {
+      await Promise.all([
+        apiClient.drivers.update(driverId, {
           customRoute: routeNodes,
           assignedRoute: routeNodes.join(","),
           status: "En Route",
-          updatedAt: serverTimestamp(),
-        },
-        { merge: true },
-      );
-
-      const assignmentId = `assign-${target.vehicleIndex}`;
-      await setDoc(
-        doc(db, "routeAssignments", assignmentId),
-        {
+        }),
+        apiClient.routeAssignments.save({
+          id: `assign-${target.vehicleIndex}`,
           companyName: target.companyName,
           vehicleIndex: target.vehicleIndex,
           driverMobile: target.mobileNo,
           driverName: target.driverName,
           stops: routeNodes.join(" → "),
           routeNodes,
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true },
-      );
+        }),
+      ]);
     } catch (err) {
-      console.warn("Firestore route assignment sync warning:", err);
+      console.warn("API route assignment update warning:", err);
     }
 
     return { success: true };
@@ -490,17 +477,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      await setDoc(
-        doc(db, "drivers", driverId),
-        {
-          customRoute: null,
-          assignedRoute: "",
-          updatedAt: serverTimestamp(),
-        },
-        { merge: true },
-      );
+      await apiClient.drivers.update(driverId, {
+        customRoute: null,
+        assignedRoute: "",
+      });
     } catch (err) {
-      console.warn("Firestore reset route warning:", err);
+      console.warn("API reset route warning:", err);
     }
 
     return { success: true };
@@ -510,10 +492,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const updated = drivers.filter((d) => d.id !== driverId);
     setDrivers(updated);
     localStorage.setItem(STORAGE_DRIVERS_KEY, JSON.stringify(updated));
+
     try {
-      await deleteDoc(doc(db, "drivers", driverId));
+      await apiClient.drivers.delete(driverId);
     } catch (err) {
-      console.warn("Firestore delete driver warning:", err);
+      console.warn("API delete driver warning:", err);
     }
   };
 
@@ -535,6 +518,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         company,
         drivers,
         loading,
+        isSyncing,
+        apiError,
         loginManager,
         loginDriver,
         signupManager,
@@ -544,6 +529,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         removeDriver,
         logout,
         switchDriverForDemo,
+        refreshFromApi,
       }}
     >
       {children}
