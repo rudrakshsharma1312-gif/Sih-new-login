@@ -408,8 +408,8 @@ export function runQPSO(
   // Stop indices from network (1..24)
   const stopIndices = STOPS.map((_, i) => i + 1);
   const D = stopIndices.length;
-  const M = Math.max(16, params.swarm);
-  const T = Math.max(20, params.iterations);
+  const M = Math.max(20, params.swarm);
+  const T = Math.max(30, params.iterations);
   const nodeCount = matrices.dist.length;
 
   // Scratch arrays for performance
@@ -428,17 +428,28 @@ export function runQPSO(
   let gBestFitness = Number.POSITIVE_INFINITY;
   let gBestSol: Solution | null = null;
 
+  // Polar sweep seed around depot
+  const depot = matrices.dist.length > 0 ? 0 : 0;
+  const polarSeed = stopIndices.slice().sort((a, b) => {
+    const da = matrices.dist[0]![a]!;
+    const db = matrices.dist[0]![b]!;
+    return da - db;
+  });
+
   for (let i = 0; i < M; i++) {
     const pos = new Float64Array(D);
     let order: number[];
 
-    if (i < 8) {
+    if (i === 0) {
+      const ref = local2OptRefine(polarSeed, matrices, params, 15, rnd, destIndex);
+      order = ref.refinedOrder;
+      pos.set(encodeOrderToPosition(order, stopIndices));
+    } else if (i < 10) {
       // Quantum visibility & transition guided seeds
       const guided = constructGuidedTour(matrices, stopIndices, tau, rnd, destIndex);
-      const refined = local2OptRefine(guided, matrices, params, 10, rnd, destIndex);
+      const refined = local2OptRefine(guided, matrices, params, 12, rnd, destIndex);
       order = refined.refinedOrder;
-      const aligned = encodeOrderToPosition(order, stopIndices);
-      pos.set(aligned);
+      pos.set(encodeOrderToPosition(order, stopIndices));
     } else {
       // Quantum continuous state exploration
       for (let d = 0; d < D; d++) {
@@ -446,7 +457,7 @@ export function runQPSO(
       }
       order = rovDecode(pos, stopIndices, scratchPairs);
       if (rnd() < 0.4) {
-        const refined = local2OptRefine(order, matrices, params, 6, rnd, destIndex);
+        const refined = local2OptRefine(order, matrices, params, 8, rnd, destIndex);
         order = refined.refinedOrder;
         pos.set(encodeOrderToPosition(order, stopIndices));
       }
@@ -487,6 +498,20 @@ export function runQPSO(
     // Compute swarm Mean Best (mbest)
     computeMeanBest(particles, D, mbest);
 
+    // Quantum Ant guidance pulse on each iteration
+    for (let a = 0; a < Math.min(6, M); a++) {
+      const tour = constructGuidedTour(matrices, stopIndices, tau, rnd, destIndex);
+      const ref = local2OptRefine(tour, matrices, params, 8, rnd, destIndex);
+      if (ref.refinedFitness < gBestFitness) {
+        gBestFitness = ref.refinedFitness;
+        gBestOrder = ref.refinedOrder.slice();
+        gBestSol = evaluateOrder(gBestOrder, matrices, params, destIndex);
+        gBestPosition.set(encodeOrderToPosition(gBestOrder, stopIndices));
+        convergedAt = it;
+        stagnant = -1;
+      }
+    }
+
     for (let i = 0; i < M; i++) {
       const p = particles[i]!;
       const X = p.position;
@@ -522,14 +547,14 @@ export function runQPSO(
 
       // Ranked Order Value (ROV) decoding to permutation
       let candOrder: number[];
-      if (rnd() < 0.4) {
+      if (rnd() < 0.45) {
         candOrder = constructGuidedTour(matrices, stopIndices, tau, rnd, destIndex);
       } else {
         candOrder = rovDecode(X, stopIndices, scratchPairs);
       }
 
       // Quantum local search refinement
-      if (i === 0 || it % 2 === 0 || rnd() < 0.35) {
+      if (i === 0 || it % 2 === 0 || rnd() < 0.4) {
         const { refinedOrder, refinedFitness } = local2OptRefine(
           candOrder,
           matrices,
@@ -569,26 +594,27 @@ export function runQPSO(
     }
 
     // Reinforce quantum edge transitions by gBest
+    const delta = (1.5 * 100.0) / Math.max(1, gBestFitness);
     for (let k = 0; k < gBestOrder.length - 1; k++) {
       const u = gBestOrder[k]!;
       const v = gBestOrder[k + 1]!;
-      tau[u]![v] = Math.min(5.0, tau[u]![v]! + 0.8);
-      tau[v]![u] = Math.min(5.0, tau[v]![u]! + 0.8);
+      tau[u]![v] = Math.min(5.0, tau[u]![v]! + delta);
+      tau[v]![u] = Math.min(5.0, tau[v]![u]! + delta);
     }
     for (let i = 0; i < nodeCount; i++) {
       for (let j = 0; j < nodeCount; j++) {
-        tau[i]![j] = Math.max(0.05, (1 - 0.08) * tau[i]![j]!);
+        tau[i]![j] = Math.max(0.05, (1 - 0.1) * tau[i]![j]!);
       }
     }
 
     // Quantum tunneling pulse when stagnated
     stagnant++;
-    if (stagnant > 8 && it < T - 6) {
+    if (stagnant > 6 && it < T - 6) {
       const weakest = particles.reduce((max, cur) =>
         cur.currentFitness > max.currentFitness ? cur : max,
       );
       const guided = constructGuidedTour(matrices, stopIndices, tau, rnd, destIndex);
-      const ref = local2OptRefine(guided, matrices, params, 12, rnd, destIndex);
+      const ref = local2OptRefine(guided, matrices, params, 15, rnd, destIndex);
       weakest.position.set(encodeOrderToPosition(ref.refinedOrder, stopIndices));
       weakest.currentFitness = ref.refinedFitness;
       if (ref.refinedFitness < gBestFitness) {
@@ -605,8 +631,8 @@ export function runQPSO(
     history.push(gBestFitness);
   }
 
-  // Final quantum polish on global best
-  const finalRef = local2OptRefine(gBestOrder, matrices, params, 35, rnd, destIndex);
+  // Final quantum deep polish on global best
+  const finalRef = local2OptRefine(gBestOrder, matrices, params, 50, rnd, destIndex);
   if (finalRef.refinedFitness < (gBestSol?.fitness ?? Number.POSITIVE_INFINITY)) {
     gBestOrder = finalRef.refinedOrder;
     gBestSol = evaluateOrder(gBestOrder, matrices, params, destIndex);
