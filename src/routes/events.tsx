@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHead } from "@/components/Shell";
 import { useSolver } from "@/lib/solver";
-import { LiveIncidentFeedPanel } from "@/components/LiveIncidentFeedPanel";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -10,12 +9,12 @@ export const Route = createFileRoute("/events")({
       {
         name: "description",
         content:
-          "Live network events: Marathahalli–Whitefield incident, MG Road closure, real-time IoT incident feed from Bengaluru's road network.",
+          "Live network events: the Marathahalli–Whitefield incident, MG Road closure and solver status, each forcing the fleet to be re-routed.",
       },
       { property: "og:title", content: "Event stream — live disruptions | QUANTA" },
       {
         property: "og:description",
-        content: "Incidents, closures and IoT sensor events driving each quantum re-solve.",
+        content: "Incidents, closures and solver status driving each re-solve.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -36,13 +35,11 @@ function EventsPage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Events"
-        title="Network Disruptions"
-        aside="Auto re-solve on event"
+        kicker="Event stream"
+        title="What the network is telling us"
+        aside="RE-SOLVE ON EVENT"
       />
-
-      {/* Manual Scenario Controls */}
-      <div className="grid gap-4 md:grid-cols-3 mb-6">
+      <div className="grid gap-4 md:grid-cols-3">
         <div className="panel hairline-top relative overflow-hidden p-5">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">
@@ -54,7 +51,7 @@ function EventsPage() {
           </div>
           <p className="mt-4 font-display text-lg font-semibold">Marathahalli–Whitefield</p>
           <p className="mt-1 text-[13px] leading-relaxed text-mist">
-            Collision on the outer corridor lifts edge cost 2.4×. QPSO auto-reroutes the fleet.
+            Collision on the outer corridor lifts edge cost 2.4×.
           </p>
           <button
             onClick={() => toggle("accident")}
@@ -109,9 +106,6 @@ function EventsPage() {
           </p>
         </div>
       </div>
-
-      {/* Live IoT Incident Feed */}
-      <LiveIncidentFeedPanel />
     </section>
   );
 }

@@ -122,10 +122,8 @@ export function DriverAssignmentPanel() {
     }
   };
 
-  const { activeNodes, destNodeIndex, networkConfig } = useSolver();
-
   // Distance and travel time calculation for draft route
-  const matrices = useMemo(() => buildMatrices(scenario, activeNodes), [scenario, activeNodes]);
+  const matrices = useMemo(() => buildMatrices(scenario), [scenario]);
 
   const routeMetrics = useMemo(() => {
     if (draftRoute.length < 2) return { km: 0, min: 0, load: 0 };
@@ -140,18 +138,18 @@ export function DriverAssignmentPanel() {
       const c = matrices.congestion[a]?.[b] ?? 1.2;
       km += d;
       min += (d / AVG_SPEED) * 60 * c;
-      load += activeNodes[b]?.demand ?? 0;
+      load += ALL_NODES[b]?.demand ?? 0;
     }
     min += Math.max(draftRoute.length - 2, 0) * 3; // 3 mins per stop
 
     return { km, min, load };
-  }, [draftRoute, matrices, activeNodes]);
+  }, [draftRoute, matrices]);
 
   // Add location to route
   const handleAddLocation = (nodeIdx: number) => {
-    // If route ends with terminus (destNodeIndex), insert before final terminus
-    if (draftRoute.length >= 2 && draftRoute[draftRoute.length - 1] === destNodeIndex) {
-      const newRoute = [...draftRoute.slice(0, -1), nodeIdx, destNodeIndex];
+    // If route ends with Depot (0), insert before final depot return
+    if (draftRoute.length >= 2 && draftRoute[draftRoute.length - 1] === 0) {
+      const newRoute = [...draftRoute.slice(0, -1), nodeIdx, 0];
       setDraftRoute(newRoute);
     } else {
       setDraftRoute([...draftRoute, nodeIdx]);
@@ -305,9 +303,6 @@ export function DriverAssignmentPanel() {
                       <p className="mt-0.5 font-mono text-[10px] text-mist">
                         📱 {drv.mobileNo} · {drv.companyName}
                       </p>
-                      <p className="mt-0.5 font-mono text-[9px] text-ember">
-                        Registered by: {drv.managerName || company?.managerName || "Fleet Manager"}
-                      </p>
                     </div>
 
                     <span
@@ -356,7 +351,7 @@ export function DriverAssignmentPanel() {
                   <span className="font-mono text-[10px] uppercase tracking-wider text-ember">
                     Currently Editing Route For:
                   </span>
-                  <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                  <div className="flex items-center gap-2 mt-0.5">
                     <h3 className="font-display text-base font-bold text-foreground">
                       {selectedDriver.driverName}
                     </h3>
@@ -364,10 +359,6 @@ export function DriverAssignmentPanel() {
                       Vehicle #{selectedDriver.vehicleIndex + 1}
                     </span>
                     <span className="font-mono text-xs text-mist">({selectedDriver.mobileNo})</span>
-                    <span className="rounded bg-glasshi px-2 py-0.5 font-mono text-[10px] text-faint">
-                      {selectedDriver.companyName} · Mgr:{" "}
-                      {selectedDriver.managerName || company?.managerName || "Assigned"}
-                    </span>
                   </div>
                 </div>
 
@@ -462,7 +453,7 @@ export function DriverAssignmentPanel() {
                       {draftRoute.map((nodeIdx, seqIdx) => {
                         const isOrigin = seqIdx === 0;
                         const isFinalDepot = seqIdx === draftRoute.length - 1 && seqIdx > 0;
-                        const nodeName = activeNodes[nodeIdx]?.name ?? "Unknown";
+                        const nodeName = ALL_NODES[nodeIdx]?.name ?? "Unknown";
 
                         return (
                           <div
@@ -472,25 +463,15 @@ export function DriverAssignmentPanel() {
                             <div className="flex items-center gap-2">
                               <span
                                 className={`flex size-4 items-center justify-center rounded-full font-mono text-[9px] font-bold ${
-                                  isOrigin
-                                    ? "bg-emerald-500 text-void"
-                                    : isFinalDepot
-                                      ? "bg-violet-500 text-void"
-                                      : "bg-obsidian border border-line text-mist"
+                                  isOrigin || isFinalDepot
+                                    ? "bg-ember text-void"
+                                    : "bg-obsidian border border-line text-mist"
                                 }`}
                               >
                                 {seqIdx}
                               </span>
                               <span className="font-mono text-[11px] text-foreground">
-                                {isOrigin ? "🚀 " : isFinalDepot ? "🏁 " : ""}
-                                {nodeName}{" "}
-                                {isOrigin
-                                  ? "(Base Origin)"
-                                  : isFinalDepot
-                                    ? destNodeIndex === 0
-                                      ? "(Return Base)"
-                                      : "(Destination Terminus)"
-                                    : ""}
+                                {nodeName} {isOrigin ? "(Origin)" : isFinalDepot ? "(Return)" : ""}
                               </span>
                             </div>
 

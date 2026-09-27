@@ -23,16 +23,12 @@ export function validateCompany(input: unknown): ValidationResult<{
   }
 
   const payload = input as Record<string, unknown>;
-  const companyName =
-    typeof payload["companyName"] === "string" ? payload["companyName"].trim() : "";
-  const managerName =
-    typeof payload["managerName"] === "string" ? payload["managerName"].trim() : "";
-  const password = typeof payload["password"] === "string" ? payload["password"].trim() : undefined;
-  const mobile = typeof payload["mobile"] === "string" ? payload["mobile"].trim() : undefined;
-  const driverCount =
-    typeof payload["driverCount"] === "number" ? payload["driverCount"] : undefined;
-  const id =
-    typeof payload["id"] === "string" && payload["id"].trim() ? payload["id"].trim() : undefined;
+  const companyName = typeof payload.companyName === "string" ? payload.companyName.trim() : "";
+  const managerName = typeof payload.managerName === "string" ? payload.managerName.trim() : "";
+  const password = typeof payload.password === "string" ? payload.password.trim() : undefined;
+  const mobile = typeof payload.mobile === "string" ? payload.mobile.trim() : undefined;
+  const driverCount = typeof payload.driverCount === "number" ? payload.driverCount : undefined;
+  const id = typeof payload.id === "string" && payload.id.trim() ? payload.id.trim() : undefined;
 
   if (companyName.length < 2 || companyName.length > 100) {
     errors.push({
@@ -67,12 +63,12 @@ export function validateCompany(input: unknown): ValidationResult<{
   return {
     success: true,
     data: {
-      ...(id !== undefined ? { id } : {}),
+      id,
       companyName,
       managerName,
-      ...(password !== undefined ? { password } : {}),
-      ...(mobile !== undefined ? { mobile } : {}),
-      ...(driverCount !== undefined ? { driverCount } : {}),
+      password,
+      mobile,
+      driverCount,
     },
   };
 }
@@ -94,27 +90,22 @@ export function validateDriver(input: unknown): ValidationResult<{
   }
 
   const payload = input as Record<string, unknown>;
-  const driverName = typeof payload["driverName"] === "string" ? payload["driverName"].trim() : "";
-  const rawMobile = typeof payload["mobileNo"] === "string" ? payload["mobileNo"].trim() : "";
+  const driverName = typeof payload.driverName === "string" ? payload.driverName.trim() : "";
+  const rawMobile = typeof payload.mobileNo === "string" ? payload.mobileNo.trim() : "";
   const mobileNo = rawMobile.replace(/[^\d+]/g, "");
-  const password = typeof payload["password"] === "string" ? payload["password"].trim() : undefined;
+  const password = typeof payload.password === "string" ? payload.password.trim() : undefined;
   const companyName =
-    typeof payload["companyName"] === "string"
-      ? payload["companyName"].trim()
-      : "Egreen Quanta Fleet";
-  const vehicleIndex =
-    typeof payload["vehicleIndex"] === "number" ? payload["vehicleIndex"] : undefined;
-  const id =
-    typeof payload["id"] === "string" && payload["id"].trim() ? payload["id"].trim() : undefined;
-  const customRoute = Array.isArray(payload["customRoute"])
-    ? (payload["customRoute"] as unknown[]).filter((x): x is number => typeof x === "number")
+    typeof payload.companyName === "string" ? payload.companyName.trim() : "Egreen Quanta Fleet";
+  const vehicleIndex = typeof payload.vehicleIndex === "number" ? payload.vehicleIndex : undefined;
+  const id = typeof payload.id === "string" && payload.id.trim() ? payload.id.trim() : undefined;
+  const customRoute = Array.isArray(payload.customRoute)
+    ? (payload.customRoute as unknown[]).filter((x): x is number => typeof x === "number")
     : undefined;
   const assignedRoute =
-    typeof payload["assignedRoute"] === "string" ? payload["assignedRoute"] : undefined;
-  const rawStatus = payload["status"];
+    typeof payload.assignedRoute === "string" ? payload.assignedRoute : undefined;
   const status =
-    rawStatus === "Active" || rawStatus === "En Route" || rawStatus === "Standby"
-      ? rawStatus
+    payload.status === "Active" || payload.status === "En Route" || payload.status === "Standby"
+      ? payload.status
       : undefined;
 
   if (driverName.length < 2 || driverName.length > 100) {
@@ -146,15 +137,15 @@ export function validateDriver(input: unknown): ValidationResult<{
   return {
     success: true,
     data: {
-      ...(id !== undefined ? { id } : {}),
+      id,
       driverName,
       mobileNo,
+      password,
       companyName,
-      ...(password !== undefined ? { password } : {}),
-      ...(vehicleIndex !== undefined ? { vehicleIndex } : {}),
-      ...(customRoute !== undefined ? { customRoute } : {}),
-      ...(assignedRoute !== undefined ? { assignedRoute } : {}),
-      ...(status !== undefined ? { status } : {}),
+      vehicleIndex,
+      customRoute,
+      assignedRoute,
+      status,
     },
   };
 }
@@ -177,23 +168,18 @@ export function validateRouteAssignment(input: unknown): ValidationResult<{
 
   const payload = input as Record<string, unknown>;
   const companyName =
-    typeof payload["companyName"] === "string"
-      ? payload["companyName"].trim()
-      : "Egreen Quanta Fleet";
-  const vehicleIndex = typeof payload["vehicleIndex"] === "number" ? payload["vehicleIndex"] : 0;
+    typeof payload.companyName === "string" ? payload.companyName.trim() : "Egreen Quanta Fleet";
+  const vehicleIndex = typeof payload.vehicleIndex === "number" ? payload.vehicleIndex : 0;
   const driverMobile =
-    typeof payload["driverMobile"] === "string" ? payload["driverMobile"].trim() : undefined;
-  const driverName =
-    typeof payload["driverName"] === "string" ? payload["driverName"].trim() : undefined;
-  const stops = typeof payload["stops"] === "string" ? payload["stops"].trim() : undefined;
-  const id =
-    typeof payload["id"] === "string" && payload["id"].trim() ? payload["id"].trim() : undefined;
-  const distanceKm = typeof payload["distanceKm"] === "number" ? payload["distanceKm"] : undefined;
-  const timeMin = typeof payload["timeMin"] === "number" ? payload["timeMin"] : undefined;
+    typeof payload.driverMobile === "string" ? payload.driverMobile.trim() : undefined;
+  const driverName = typeof payload.driverName === "string" ? payload.driverName.trim() : undefined;
+  const stops = typeof payload.stops === "string" ? payload.stops.trim() : undefined;
+  const id = typeof payload.id === "string" && payload.id.trim() ? payload.id.trim() : undefined;
+  const distanceKm = typeof payload.distanceKm === "number" ? payload.distanceKm : undefined;
+  const timeMin = typeof payload.timeMin === "number" ? payload.timeMin : undefined;
 
-  const rawNodes = payload["routeNodes"];
-  const routeNodes = Array.isArray(rawNodes)
-    ? (rawNodes as unknown[]).filter((x): x is number => typeof x === "number")
+  const routeNodes = Array.isArray(payload.routeNodes)
+    ? (payload.routeNodes as unknown[]).filter((x): x is number => typeof x === "number")
     : [];
 
   if (routeNodes.length < 2) {
@@ -214,15 +200,15 @@ export function validateRouteAssignment(input: unknown): ValidationResult<{
   return {
     success: true,
     data: {
-      ...(id !== undefined ? { id } : {}),
+      id,
       companyName,
       vehicleIndex,
+      driverMobile,
+      driverName,
+      stops,
       routeNodes,
-      ...(driverMobile !== undefined ? { driverMobile } : {}),
-      ...(driverName !== undefined ? { driverName } : {}),
-      ...(stops !== undefined ? { stops } : {}),
-      ...(distanceKm !== undefined ? { distanceKm } : {}),
-      ...(timeMin !== undefined ? { timeMin } : {}),
+      distanceKm,
+      timeMin,
     },
   };
 }

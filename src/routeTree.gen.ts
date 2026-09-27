@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BenchmarkRouteImport } from './routes/benchmark'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as FleetRouteImport } from './routes/fleet'
-import { Route as IntelligenceRouteImport } from './routes/intelligence'
 import { Route as OptimizerRouteImport } from './routes/optimizer'
 
 const IndexRoute = IndexRouteImport.update({
@@ -36,11 +35,6 @@ const FleetRoute = FleetRouteImport.update({
   path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IntelligenceRoute = IntelligenceRouteImport.update({
-  id: '/intelligence',
-  path: '/intelligence',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OptimizerRoute = OptimizerRouteImport.update({
   id: '/optimizer',
   path: '/optimizer',
@@ -52,7 +46,6 @@ export interface FileRoutesByFullPath {
   '/benchmark': typeof BenchmarkRoute
   '/events': typeof EventsRoute
   '/fleet': typeof FleetRoute
-  '/intelligence': typeof IntelligenceRoute
   '/optimizer': typeof OptimizerRoute
 }
 export interface FileRoutesByTo {
@@ -60,7 +53,6 @@ export interface FileRoutesByTo {
   '/benchmark': typeof BenchmarkRoute
   '/events': typeof EventsRoute
   '/fleet': typeof FleetRoute
-  '/intelligence': typeof IntelligenceRoute
   '/optimizer': typeof OptimizerRoute
 }
 export interface FileRoutesById {
@@ -69,23 +61,14 @@ export interface FileRoutesById {
   '/benchmark': typeof BenchmarkRoute
   '/events': typeof EventsRoute
   '/fleet': typeof FleetRoute
-  '/intelligence': typeof IntelligenceRoute
   '/optimizer': typeof OptimizerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/' | '/benchmark' | '/events' | '/fleet' | '/intelligence' | '/optimizer'
+  fullPaths: '/' | '/benchmark' | '/events' | '/fleet' | '/optimizer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/benchmark' | '/events' | '/fleet' | '/intelligence' | '/optimizer'
-  id:
-    | '__root__'
-    | '/'
-    | '/benchmark'
-    | '/events'
-    | '/fleet'
-    | '/intelligence'
-    | '/optimizer'
+  to: '/' | '/benchmark' | '/events' | '/fleet' | '/optimizer'
+  id: '__root__' | '/' | '/benchmark' | '/events' | '/fleet' | '/optimizer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,7 +76,6 @@ export interface RootRouteChildren {
   BenchmarkRoute: typeof BenchmarkRoute
   EventsRoute: typeof EventsRoute
   FleetRoute: typeof FleetRoute
-  IntelligenceRoute: typeof IntelligenceRoute
   OptimizerRoute: typeof OptimizerRoute
 }
 
@@ -127,13 +109,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/intelligence': {
-      id: '/intelligence'
-      path: '/intelligence'
-      fullPath: '/intelligence'
-      preLoaderRoute: typeof IntelligenceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/optimizer': {
       id: '/optimizer'
       path: '/optimizer'
@@ -149,7 +124,6 @@ const rootRouteChildren: RootRouteChildren = {
   BenchmarkRoute: BenchmarkRoute,
   EventsRoute: EventsRoute,
   FleetRoute: FleetRoute,
-  IntelligenceRoute: IntelligenceRoute,
   OptimizerRoute: OptimizerRoute,
 }
 export const routeTree = rootRouteImport

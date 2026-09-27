@@ -17,18 +17,6 @@
           "maxLength": 100,
           "description": "Name of the manager who registered"
         },
-        "managerId": {
-          "type": "string",
-          "description": "Unique manager user ID"
-        },
-        "password": {
-          "type": "string",
-          "description": "Manager login password"
-        },
-        "mobile": {
-          "type": "string",
-          "description": "Manager contact phone number"
-        },
         "driverCount": {
           "type": "number",
           "description": "Initial number of drivers registered"
@@ -68,20 +56,6 @@
           "minLength": 2,
           "maxLength": 100,
           "description": "Fleet company the driver is employed at"
-        },
-        "managerName": {
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 100,
-          "description": "Name of the fleet manager who registered this driver"
-        },
-        "managerId": {
-          "type": "string",
-          "description": "Unique ID of the manager who registered this driver"
-        },
-        "registeredBy": {
-          "type": "string",
-          "description": "Manager and company attribution string"
         },
         "vehicleIndex": {
           "type": "number",

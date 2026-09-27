@@ -1,18 +1,23 @@
 import { ALGORITHM_META, type AlgorithmId, type Run } from "@/lib/optimizer";
 
-const ORDER: AlgorithmId[] = ["qpso", "ga", "aco", "qso", "sa"];
+const ORDER: AlgorithmId[] = ["qpso", "ga", "aco", "sa"];
 
 export function BenchmarkTable({ runs }: { runs: Partial<Record<AlgorithmId, Run>> }) {
   const base = runs.qpso;
 
   return (
-    <div className="panel relative overflow-hidden p-4">
-      <div className="flex items-end justify-between mb-4">
-        <h3 className="font-display text-sm font-semibold">
-          Results
-        </h3>
+    <div className="panel relative overflow-hidden p-5">
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ember">
+            Benchmark engine
+          </p>
+          <h3 className="mt-1 font-display text-lg font-semibold tracking-tight">
+            Head-to-head on the same instance
+          </h3>
+        </div>
         <span className="font-mono text-[10px] text-faint">
-          {Object.keys(runs).length} algorithms
+          {Object.keys(runs).length} algorithms · 25 nodes
         </span>
       </div>
 

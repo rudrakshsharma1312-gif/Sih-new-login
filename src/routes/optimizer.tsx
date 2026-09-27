@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ControlRail } from "@/components/ControlRail";
 import { ConvergenceChart } from "@/components/ConvergenceChart";
-import { HubSelectorBar } from "@/components/HubSelectorBar";
 import { PageHead } from "@/components/Shell";
 import { useSolver } from "@/lib/solver";
 
@@ -71,11 +70,10 @@ function OptimizerPage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Optimizer"
-        title="Solver Parameters"
-        aside="QPSO Configuration"
+        kicker="Control surface"
+        title="Tune the swarm, watch it converge"
+        aside="α β γ δ TUNABLE"
       />
-      <HubSelectorBar className="mb-4" />
       <div className="grid gap-4 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <ControlRail
@@ -103,76 +101,6 @@ function OptimizerPage() {
               </div>
             ))}
           </div>
-
-          {qpso?.diagnostics && (
-            <div className="panel flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 font-mono text-[11px] text-faint">
-              <div className="flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-ember" />
-                <span className="text-foreground font-medium">QPSO Solver Active</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span>
-                  Tunnel events:{" "}
-                  <span className="text-foreground font-medium">
-                    {qpso.diagnostics.tunnelEvents}
-                  </span>
-                </span>
-                <span>
-                  Wave dispersion:{" "}
-                  <span className="text-foreground font-medium">
-                    {qpso.diagnostics.meanWavePacketWidth.toFixed(2)}
-                  </span>
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* ESG Green Fleet & Carbon Intelligence */}
-          {qpso && (
-            <div className="panel p-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-medium uppercase tracking-wider text-faint">
-                    Carbon Impact
-                  </span>
-                </div>
-                <span className="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] text-emerald-300 border border-emerald-500/30">
-                  {ga
-                    ? `${Math.max(0, ((ga.best.co2Kg - qpso.best.co2Kg) / ga.best.co2Kg) * 100).toFixed(1)}% CO₂ Saved vs GA`
-                    : "Optimized Route"}
-                </span>
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4 font-mono text-xs">
-                <div>
-                  <span className="text-[10px] uppercase text-mist">Carbon Reduction</span>
-                  <p className="mt-1 text-base font-bold text-foreground">
-                    {Math.max(0, qpso.best.distanceKm * 0.34 * 0.19).toFixed(1)}{" "}
-                    <span className="text-xs font-normal text-emerald-400">kg CO₂</span>
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase text-mist">Fuel Conserved</span>
-                  <p className="mt-1 text-base font-bold text-foreground">
-                    {Math.max(0, (qpso.best.distanceKm * 0.34) / 7.2).toFixed(1)}{" "}
-                    <span className="text-xs font-normal text-emerald-400">L Diesel</span>
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase text-mist">Annualized Offset</span>
-                  <p className="mt-1 text-base font-bold text-foreground">
-                    ~{((Math.max(0, qpso.best.distanceKm * 0.34 * 0.19) * 300) / 21).toFixed(0)}{" "}
-                    <span className="text-xs font-normal text-emerald-400">trees eq.</span>
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase text-mist">Green Fleet Index</span>
-                  <p className="mt-1 text-base font-bold text-emerald-400">
-                    94.8 / 100 <span className="text-[10px] font-normal text-mist">(Tier 1)</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>

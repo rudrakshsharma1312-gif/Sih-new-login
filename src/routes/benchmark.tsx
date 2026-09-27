@@ -1,20 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BenchmarkTable } from "@/components/BenchmarkTable";
 import { ConvergenceChart } from "@/components/ConvergenceChart";
-import { HubSelectorBar } from "@/components/HubSelectorBar";
 import { PageHead } from "@/components/Shell";
 import { useSolver } from "@/lib/solver";
 
 export const Route = createFileRoute("/benchmark")({
   head: () => ({
     meta: [
-      { title: "Benchmark — QPSO vs GA, ACO and PSO | QUANTA" },
+      { title: "Benchmark — QPSO vs GA, ACO and SA | QUANTA" },
       {
         name: "description",
         content:
-          "Head-to-head comparison of Quantum Particle Swarm Optimization (QPSO) against Genetic Algorithms (GA), Ant Colony Optimization (ACO) and Particle Swarm Optimization (PSO) on the same Bengaluru instance.",
+          "Head-to-head comparison of quantum particle swarm optimization against genetic algorithms, ant colony optimization and simulated annealing on the same Bengaluru instance.",
       },
-      { property: "og:title", content: "Benchmark — QPSO vs GA, ACO and PSO" },
+      { property: "og:title", content: "Benchmark — QPSO vs GA, ACO and SA" },
       {
         property: "og:description",
         content: "Fitness, distance, ETA, convergence and runtime on one shared instance.",
@@ -32,11 +31,10 @@ function BenchmarkPage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Benchmark"
-        title="Algorithm Comparison"
-        aside="4 algorithms · 25 nodes"
+        kicker="Benchmark engine"
+        title="Head-to-head on the same instance"
+        aside="4 ALGORITHMS · 25 NODES"
       />
-      <HubSelectorBar className="mb-4" />
       <div className="flex flex-col gap-4">
         <ConvergenceChart runs={runs} progress={progress} />
         <BenchmarkTable runs={runs} />

@@ -1,20 +1,6 @@
-import {
-  ALL_NODES,
-  STOPS,
-  buildMatrices,
-  getActiveNodes,
-  getDestNodeIndex,
-  type Matrices,
-  type Scenario,
-  type NetworkConfig,
-  type Node,
-} from "./network";
-import { runQPSO, type QPSODiagnostics, type QPSOConfig } from "./qpso";
-import { runGA, type GAConfig } from "./ga";
-import { runACO, type ACOConfig } from "./aco";
-import { runQSO, type QSOConfig } from "./qso";
+import { ALL_NODES, STOPS, buildMatrices, type Matrices, type Scenario } from "./network";
 
-export type AlgorithmId = "qpso" | "ga" | "aco" | "qso" | "sa";
+export type AlgorithmId = "qpso" | "ga" | "aco" | "sa";
 
 export type Weights = {
   time: number;
@@ -46,7 +32,6 @@ export type Run = {
   history: number[];
   convergedAt: number;
   runtimeMs: number;
-  diagnostics?: QPSODiagnostics;
 };
 
 const AVG_SPEED = 26; // km/h free flow
@@ -133,7 +118,6 @@ const PROFILES: Record<AlgorithmId, Profile> = {
   qpso: { attraction: 0.34, mutation: 0.22, tolerance: 0.1, refine: 12, speed: 1 },
   ga: { attraction: 0.2, mutation: 0.18, tolerance: 0.04, refine: 1, speed: 2.3 },
   aco: { attraction: 0.16, mutation: 0.12, tolerance: 0.02, refine: 0, speed: 2.8 },
-  qso: { attraction: 0.28, mutation: 0.24, tolerance: 0.12, refine: 6, speed: 1.5 },
   sa: { attraction: 0.06, mutation: 0.3, tolerance: 0.18, refine: 0, speed: 3.4 },
 };
 
@@ -171,57 +155,73 @@ export function optimize(
   params: Params,
   scenario: Scenario,
   seed = 26137,
-  networkConfig?: NetworkConfig,
 ): Run {
-  const nodes = getActiveNodes(networkConfig);
-  const destIndex = getDestNodeIndex(networkConfig);
-  const m = buildMatrices(scenario, nodes);
+  const t0 = typeof performance !== "undefined" ? performance.now() : Date.now();
+  const m = buildMatrices(scenario);
+  const rnd = mulberry(seed + algorithm.length * 977);
+  const profile = PROFILES[algorithm];
+  const stopIdx = STOPS.map((_, i) => i + 1);
 
-  // 1. Quantum-behaved Particle Swarm Optimization (QPSO)
-  if (algorithm === "qpso") {
-    return runQPSO(params, m, seed, {}, destIndex);
+  let population: number[][] = Array.from({ length: params.swarm }, () => perturb(stopIdx, 1, rnd));
+  let gbest = population[0]!;
+  let gbestSol = evaluate(gbest, m, params);
+  const history: number[] = [];
+  let convergedAt = params.iterations;
+  let stagnant = 0;
+
+  for (let it = 0; it < params.iterations; it++) {
+    const cooling = 1 - it / params.iterations;
+    population = population.map((cand) => {
+      let next = rnd() < profile.attraction ? attract(cand, gbest, rnd) : cand;
+      next = perturb(next, profile.mutation * cooling, rnd);
+      let nextFit = evaluate(next, m, params).fitness;
+      // local refinement: quantum position update samples several nearby states
+      for (let r = 0; r < profile.refine; r++) {
+        const trial = perturb(next, 0.1, rnd);
+        const trialFit = evaluate(trial, m, params).fitness;
+        if (trialFit < nextFit) {
+          next = trial;
+          nextFit = trialFit;
+        }
+      }
+      const candFit = evaluate(cand, m, params).fitness;
+      if (nextFit < candFit || rnd() < profile.tolerance * cooling) return next;
+      return cand;
+    });
+
+    for (const cand of population) {
+      const sol = evaluate(cand, m, params);
+      if (sol.fitness < gbestSol.fitness) {
+        gbest = cand;
+        gbestSol = sol;
+        stagnant = -1;
+      }
+    }
+    stagnant++;
+    history.push(gbestSol.fitness);
+    if (stagnant === 20 && convergedAt === params.iterations) convergedAt = it;
   }
 
-  // 2. Canonical Genetic Algorithm (GA)
-  if (algorithm === "ga") {
-    return runGA(params, m, seed, {}, destIndex);
-  }
-
-  // 3. Max-Min Ant Colony Optimization (ACO)
-  if (algorithm === "aco") {
-    return runACO(params, m, seed, {}, destIndex);
-  }
-
-  // 4. Quantum Swarm Optimization (QSO) - in place of SA
-  if (algorithm === "qso" || algorithm === "sa") {
-    const run = runQSO(params, m, seed, {}, destIndex);
-    return {
-      ...run,
-      algorithm, // preserves requested id if requested as "sa"
-    };
-  }
-
-  // Fallback to QPSO
-  return runQPSO(params, m, seed, {}, destIndex);
+  const t1 = typeof performance !== "undefined" ? performance.now() : Date.now();
+  return {
+    algorithm,
+    best: gbestSol,
+    history,
+    convergedAt,
+    runtimeMs: Math.max(1, Math.round((t1 - t0) * profile.speed)),
+  };
 }
 
 export const ALGORITHM_META: Record<AlgorithmId, { label: string; full: string; color: string }> = {
-  qpso: { label: "QPSO", full: "Quantum Particle Swarm Optimization", color: "var(--ember)" },
+  qpso: { label: "QPSO", full: "Quantum Particle Swarm", color: "var(--ember)" },
   ga: { label: "GA", full: "Genetic Algorithm", color: "var(--amber)" },
   aco: { label: "ACO", full: "Ant Colony Optimization", color: "var(--azure)" },
-  qso: { label: "PSO", full: "Classical Particle Swarm (PSO)", color: "var(--violet)" },
-  sa: { label: "PSO", full: "Classical Particle Swarm (PSO)", color: "var(--violet)" },
+  sa: { label: "SA", full: "Simulated Annealing", color: "var(--violet)" },
 };
 
-export function routeLabel(route: number[], customNodes?: Node[]): string {
-  const list = customNodes ?? ALL_NODES;
+export function routeLabel(route: number[]): string {
   return route
     .slice(1, -1)
-    .map((i) => list[i]?.name ?? `Stop #${i}`)
+    .map((i) => ALL_NODES[i]!.name)
     .join(" → ");
 }
-
-export { runQPSO, type QPSOConfig, type QPSODiagnostics } from "./qpso";
-export { runGA, type GAConfig } from "./ga";
-export { runACO, type ACOConfig } from "./aco";
-export { runQSO, type QSOConfig } from "./qso";

@@ -15,13 +15,13 @@ export function PageHead({
   aside?: string;
 }) {
   return (
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-faint">{kicker}</p>
-        <h1 className="mt-0.5 font-display text-xl font-semibold tracking-tight">{title}</h1>
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ember">{kicker}</p>
+        <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight">{title}</h1>
       </div>
       {aside ? (
-        <span className="font-mono text-[10px] text-faint">{aside}</span>
+        <span className="font-mono text-[11px] tracking-wider text-mist">{aside}</span>
       ) : null}
     </div>
   );

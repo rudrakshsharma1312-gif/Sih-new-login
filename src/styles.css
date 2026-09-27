@@ -5,18 +5,17 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * QUANTA — Fleet Route Command System
- * Design tokens: Inter Tight display, Inter body, JetBrains Mono data
- * Palette: dark carbon background, warm amber accent, neutral grays
+ * QUANTA — Modern Logistics & Route Command System
+ * Inspired by Move. (Inter Tight typography, #FFD358 canary accent, #080A0C carbon contrast, #F3F3F3 surface)
  */
 
 @theme inline {
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 10px;
-  --radius-2xl: 12px;
-  --radius-3xl: 16px;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 16px);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -57,7 +56,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 1rem;
   --void: #080a0c;
   --obsidian: #11141a;
   --glass: #171b23;
@@ -110,14 +109,35 @@ html.light body {
   }
 }
 
-/* Flat panel surface — no gradient, just a bordered card */
+@utility speck {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(1px);
+  background: radial-gradient(circle, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 70%);
+}
+
+@utility sheen {
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.06) 46%,
+    color-mix(in oklab, var(--ember) 12%, transparent) 54%,
+    transparent 70%
+  );
+}
+
+@utility glowdot {
+  box-shadow:
+    0 0 0 4px color-mix(in oklab, var(--ember) 14%, transparent),
+    0 0 18px 2px color-mix(in oklab, var(--ember) 55%, transparent);
+}
+
 @utility panel {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--glass);
+  background: linear-gradient(to bottom, var(--glass), var(--obsidian));
 }
 
-/* Decorative top hairline — kept but thinned */
 @utility hairline-top {
   &::before {
     content: "";
@@ -125,20 +145,19 @@ html.light body {
     top: 0;
     left: 0;
     height: 1px;
-    width: 25%;
+    width: 33%;
     background: linear-gradient(
       to right,
-      color-mix(in oklab, var(--ember) 50%, transparent),
+      color-mix(in oklab, var(--ember) 70%, transparent),
       transparent
     );
   }
 }
 
-/* Subtle entrance animation — shortened */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -147,76 +166,87 @@ html.light body {
 }
 
 @utility rise {
-  animation: rise 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* Status badges — consistent sizing */
-@utility badge-status {
-  font-weight: 600;
-  border-radius: 4px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.625rem;
-  font-family: var(--font-mono);
-  letter-spacing: 0.03em;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+@utility card-move {
+  background: var(--obsidian);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 4px 24px -2px rgba(0, 0, 0, 0.04),
+    0 2px 8px -1px rgba(0, 0, 0, 0.02);
 }
 
 @utility badge-move-transit {
   background-color: #ffd358;
   color: #080a0c;
-  font-weight: 600;
-  border-radius: 4px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.625rem;
-  font-family: var(--font-mono);
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
 @utility badge-move-delivered {
   background-color: #d1fae5;
   color: #065f46;
-  font-weight: 600;
-  border-radius: 4px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.625rem;
-  font-family: var(--font-mono);
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
 @utility badge-move-pending {
   background-color: #f3f4f6;
   color: #4b5563;
-  font-weight: 600;
-  border-radius: 4px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.625rem;
-  font-family: var(--font-mono);
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
-/* Accent dot indicator */
-@utility glowdot {
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ember) 12%, transparent);
+/*
+ * Lovable watermark & badge suppression
+ */
+#lovable-badge,
+aside#lovable-badge,
+.lovable-badge,
+[id*="lovable-badge"],
+[class*="lovable-badge"],
+[data-lovable-badge],
+a[href*="lovable.dev"],
+a[href*="gpteng.co"],
+#gpt-engineer-badge,
+[id*="gpt-engineer"],
+[class*="gpt-engineer"],
+[aria-label*="Lovable" i],
+[title*="Lovable" i] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  z-index: -9999 !important;
 }
 
-/* Subtle overlay sheen for map surfaces */
-@utility sheen {
-  background: linear-gradient(
-    115deg,
-    transparent 30%,
-    rgb(255 255 255 / 0.04) 46%,
-    color-mix(in oklab, var(--ember) 8%, transparent) 54%,
-    transparent 70%
-  );
-}
