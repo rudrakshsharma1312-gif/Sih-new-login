@@ -42,45 +42,42 @@ function FleetPage() {
     <section className="pb-20">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <PageHead
-          kicker="Fleet operations & Dispatch"
-          title="Who drives where, and when"
-          aside={`${params.vehicles} VEHICLES · DEPOT PEENYA`}
+          kicker="Fleet"
+          title="Driver Assignments & Routes"
+          aside={`${params.vehicles} vehicles`}
         />
 
         {/* View Toggle Tabs */}
-        <div className="flex items-center gap-1 rounded-xl border border-line bg-obsidian p-1 font-mono text-xs">
+        <div className="flex items-center gap-0.5 rounded-lg border border-line bg-obsidian p-0.5 font-mono text-xs">
           <button
             onClick={() => setActiveTab("assignment")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition-all ${
+            className={`rounded-md px-3 py-1.5 transition ${
               activeTab === "assignment"
-                ? "bg-ember text-void font-bold shadow"
+                ? "bg-ember text-void font-semibold"
                 : "text-mist hover:text-foreground"
             }`}
           >
-            <span>🗺️</span>
-            <span>Driver Assignment</span>
+            Assignment
           </button>
           <button
             onClick={() => setActiveTab("performance")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition-all ${
+            className={`rounded-md px-3 py-1.5 transition ${
               activeTab === "performance"
-                ? "bg-ember text-void font-bold shadow"
+                ? "bg-ember text-void font-semibold"
                 : "text-mist hover:text-foreground"
             }`}
           >
-            <span>📊</span>
-            <span>Performance Chart</span>
+            Performance
           </button>
           <button
             onClick={() => setActiveTab("manifest")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition-all ${
+            className={`rounded-md px-3 py-1.5 transition ${
               activeTab === "manifest"
-                ? "bg-ember text-void font-bold shadow"
+                ? "bg-ember text-void font-semibold"
                 : "text-mist hover:text-foreground"
             }`}
           >
-            <span>🚛</span>
-            <span>Fleet Manifest</span>
+            Manifest
           </button>
         </div>
       </div>
@@ -99,11 +96,11 @@ function FleetPage() {
       ) : (
         <div className="mt-4 grid gap-4 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <div className="relative rounded-2xl border border-line bg-gradient-to-b from-glass to-obsidian p-2">
-              <div className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md border border-line bg-void/70 px-2.5 py-1">
-                <span className="size-1.5 animate-pulse rounded-full bg-ember" />
-                <span className="font-mono text-[9px] tracking-[0.2em] text-mist">
-                  LIVE · {clock} IST
+            <div className="panel relative p-2">
+              <div className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md border border-line bg-void/80 px-2 py-1">
+                <span className="size-1.5 rounded-full bg-ember" />
+                <span className="font-mono text-[10px] text-faint">
+                  {clock} IST
                 </span>
               </div>
               <CityMap

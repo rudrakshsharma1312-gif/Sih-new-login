@@ -34,22 +34,17 @@ export function ConvergenceChart({ runs, progress }: Props) {
   const qpso = runs.qpso;
 
   return (
-    <div className="panel relative flex flex-col p-5">
+    <div className="panel relative flex flex-col p-4">
       <div className="flex items-start justify-between">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ember">
-            Convergence
-          </p>
-          <h3 className="mt-1 font-display text-lg font-semibold tracking-tight">
-            Swarm settling into the optimum
-          </h3>
-        </div>
+        <h3 className="font-display text-sm font-semibold">
+          Convergence
+        </h3>
         {qpso && (
           <div className="text-right">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-faint">
+            <p className="font-mono text-[10px] text-faint">
               Best fitness
             </p>
-            <p className="font-mono text-[15px] text-ember">{qpso.best.fitness.toFixed(3)}</p>
+            <p className="font-mono text-sm text-foreground">{qpso.best.fitness.toFixed(3)}</p>
           </div>
         )}
       </div>

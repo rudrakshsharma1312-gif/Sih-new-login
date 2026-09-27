@@ -33,9 +33,9 @@ function IntelligencePage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Intelligence Hub"
-        title="Predictive analytics & route export"
-        aside="ML FORECAST · SLA WATCH · EXPORT"
+        kicker="Intelligence"
+        title="Forecasts & Route Export"
+        aside="Traffic prediction · Scenarios · Export"
       />
 
       <div className="grid gap-6 lg:grid-cols-12">

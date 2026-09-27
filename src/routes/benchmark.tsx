@@ -32,9 +32,9 @@ function BenchmarkPage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Benchmark engine"
-        title="Head-to-head on the same instance"
-        aside="4 ALGORITHMS · 25 NODES"
+        kicker="Benchmark"
+        title="Algorithm Comparison"
+        aside="4 algorithms · 25 nodes"
       />
       <HubSelectorBar className="mb-4" />
       <div className="flex flex-col gap-4">

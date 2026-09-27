@@ -36,9 +36,9 @@ function EventsPage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Event stream"
-        title="What the network is telling us"
-        aside="RE-SOLVE ON EVENT"
+        kicker="Events"
+        title="Network Disruptions"
+        aside="Auto re-solve on event"
       />
 
       {/* Manual Scenario Controls */}

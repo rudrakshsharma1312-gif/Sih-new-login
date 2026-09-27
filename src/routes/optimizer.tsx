@@ -71,9 +71,9 @@ function OptimizerPage() {
   return (
     <section className="pb-20">
       <PageHead
-        kicker="Control surface"
-        title="Tune the swarm, watch it converge"
-        aside="α β γ δ TUNABLE"
+        kicker="Optimizer"
+        title="Solver Parameters"
+        aside="QPSO Configuration"
       />
       <HubSelectorBar className="mb-4" />
       <div className="grid gap-4 lg:grid-cols-12">
@@ -107,28 +107,21 @@ function OptimizerPage() {
           {qpso?.diagnostics && (
             <div className="panel flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 font-mono text-[11px] text-faint">
               <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-ember animate-pulse" />
-                <span className="text-foreground font-semibold">
-                  QPSO Delta-Potential Wave Engine Active
-                </span>
-                <span>·</span>
-                <span>Schrödinger Equation Monte Carlo Sampling</span>
+                <span className="size-1.5 rounded-full bg-ember" />
+                <span className="text-foreground font-medium">QPSO Solver Active</span>
               </div>
               <div className="flex items-center gap-4">
                 <span>
-                  Quantum Tunneling:{" "}
-                  <span className="text-ember font-bold">
-                    {qpso.diagnostics.tunnelEvents} jumps
+                  Tunnel events:{" "}
+                  <span className="text-foreground font-medium">
+                    {qpso.diagnostics.tunnelEvents}
                   </span>
                 </span>
                 <span>
-                  Wave Dispersion:{" "}
-                  <span className="text-ember font-bold">
+                  Wave dispersion:{" "}
+                  <span className="text-foreground font-medium">
                     {qpso.diagnostics.meanWavePacketWidth.toFixed(2)}
                   </span>
-                </span>
-                <span>
-                  CE α Rate: <span className="text-ember font-bold">0.98 → 0.45</span>
                 </span>
               </div>
             </div>
@@ -136,12 +129,11 @@ function OptimizerPage() {
 
           {/* ESG Green Fleet & Carbon Intelligence */}
           {qpso && (
-            <div className="panel border-emerald-500/25 bg-emerald-950/10 p-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-500/15 pb-2">
+            <div className="panel p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">🌱</span>
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400">
-                    Eco-Routing & Decarbonization Intelligence
+                  <span className="font-mono text-xs font-medium uppercase tracking-wider text-faint">
+                    Carbon Impact
                   </span>
                 </div>
                 <span className="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] text-emerald-300 border border-emerald-500/30">
