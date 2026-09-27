@@ -257,7 +257,7 @@ export function IntroOpeningPage() {
               <div className="rounded-xl border border-line bg-glass/40 p-3">
                 <p className="font-display text-xl font-bold text-emerald-400">4 Heuristics</p>
                 <p className="mt-0.5 font-mono text-[10px] uppercase text-mist">
-                  QPSO vs GA/ACO/QSO
+                  QPSO vs GA/ACO/PSO
                 </p>
               </div>
             </div>

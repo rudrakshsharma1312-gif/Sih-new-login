@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "QUANTA solves multi-vehicle routing across the Bengaluru road network with quantum-inspired particle swarm optimization, benchmarked live against GA, ACO and QSO.",
+          "QUANTA solves multi-vehicle routing across the Bengaluru road network with Quantum-behaved Particle Swarm Optimization (QPSO), benchmarked live against GA, ACO and PSO.",
       },
       {
         property: "og:title",
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Live fleet routing command centre: QPSO vs GA, ACO and QSO on the Bengaluru road graph.",
+          "Live fleet routing command centre: QPSO vs GA, ACO and PSO on the Bengaluru road graph.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -78,7 +78,7 @@ function Overview() {
           <p className="max-w-lg text-sm leading-relaxed text-mist">
             Autonomous multi-vehicle route optimization across the live Bengaluru road graph.
             Quantum-inspired particles tunnel through congestion bottlenecks, benchmarked live
-            against GA, ACO and Quantum Swarm Optimization (QSO).
+            against GA, ACO and Classical Particle Swarm Optimization (PSO).
           </p>
 
           <div className="flex flex-wrap items-center gap-3">

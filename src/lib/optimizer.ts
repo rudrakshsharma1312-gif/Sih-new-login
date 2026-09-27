@@ -206,11 +206,11 @@ export function optimize(
 }
 
 export const ALGORITHM_META: Record<AlgorithmId, { label: string; full: string; color: string }> = {
-  qpso: { label: "QPSO", full: "Quantum Particle Swarm", color: "var(--ember)" },
+  qpso: { label: "QPSO", full: "Quantum Particle Swarm Optimization", color: "var(--ember)" },
   ga: { label: "GA", full: "Genetic Algorithm", color: "var(--amber)" },
   aco: { label: "ACO", full: "Ant Colony Optimization", color: "var(--azure)" },
-  qso: { label: "QSO", full: "Quantum Swarm Optimization", color: "var(--violet)" },
-  sa: { label: "QSO", full: "Quantum Swarm Optimization (ex-SA)", color: "var(--violet)" },
+  qso: { label: "PSO", full: "Classical Particle Swarm (PSO)", color: "var(--violet)" },
+  sa: { label: "PSO", full: "Classical Particle Swarm (PSO)", color: "var(--violet)" },
 };
 
 export function routeLabel(route: number[], customNodes?: Node[]): string {

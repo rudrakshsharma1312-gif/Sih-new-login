@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "QUANTA — Route Intelligence" },
       {
         property: "og:description",
-        content: "QPSO fleet routing command centre, benchmarked against GA, ACO and QSO.",
+        content: "QPSO fleet routing command centre, benchmarked against GA, ACO and PSO.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

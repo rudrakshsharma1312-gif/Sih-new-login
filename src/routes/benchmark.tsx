@@ -8,13 +8,13 @@ import { useSolver } from "@/lib/solver";
 export const Route = createFileRoute("/benchmark")({
   head: () => ({
     meta: [
-      { title: "Benchmark — QPSO vs GA, ACO and QSO | QUANTA" },
+      { title: "Benchmark — QPSO vs GA, ACO and PSO | QUANTA" },
       {
         name: "description",
         content:
-          "Head-to-head comparison of quantum particle swarm optimization against genetic algorithms, ant colony optimization and quantum swarm optimization (QSO) on the same Bengaluru instance.",
+          "Head-to-head comparison of Quantum Particle Swarm Optimization (QPSO) against Genetic Algorithms (GA), Ant Colony Optimization (ACO) and Particle Swarm Optimization (PSO) on the same Bengaluru instance.",
       },
-      { property: "og:title", content: "Benchmark — QPSO vs GA, ACO and QSO" },
+      { property: "og:title", content: "Benchmark — QPSO vs GA, ACO and PSO" },
       {
         property: "og:description",
         content: "Fitness, distance, ETA, convergence and runtime on one shared instance.",
