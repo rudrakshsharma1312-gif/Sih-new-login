@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "QUANTA — Route Intelligence" },
       {
         property: "og:description",
-        content: "QPSO fleet routing command centre, benchmarked against GA, ACO and SA.",
+        content: "QPSO fleet routing command centre, benchmarked against GA, ACO and PSO.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -131,51 +131,6 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
-  useEffect(() => {
-    const stripLovableElements = () => {
-      const selectors = [
-        "#lovable-badge",
-        "aside#lovable-badge",
-        ".lovable-badge",
-        '[id*="lovable-badge"]',
-        '[class*="lovable-badge"]',
-        "[data-lovable-badge]",
-        'a[href*="lovable.dev"]',
-        'a[href*="gpteng.co"]',
-        "#gpt-engineer-badge",
-        '[id*="gpt-engineer"]',
-        '[class*="gpt-engineer"]',
-      ];
-
-      for (const sel of selectors) {
-        document.querySelectorAll(sel).forEach((el) => {
-          el.remove();
-        });
-      }
-
-      // Detect and strip any injected container referencing Lovable
-      document.querySelectorAll("aside, div, a, span, button").forEach((el) => {
-        const text = el.textContent?.trim() || "";
-        if (
-          text.includes("Edit with Lovable") ||
-          text.includes("Made with Lovable") ||
-          (text.includes("Lovable") &&
-            (el.tagName === "ASIDE" || el.id.toLowerCase().includes("lovable")))
-        ) {
-          el.remove();
-        }
-      });
-    };
-
-    stripLovableElements();
-    const observer = new MutationObserver(() => {
-      stripLovableElements();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

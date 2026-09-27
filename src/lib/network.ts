@@ -43,6 +43,134 @@ export const STOPS: Node[] = [
 
 export const ALL_NODES = [DEPOT, ...STOPS];
 
+export type HubLocation = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  tag?: string;
+  address?: string;
+  isCustom?: boolean;
+};
+
+export type NetworkConfig = {
+  pickupHub: HubLocation;
+  destinationHub: HubLocation;
+  isRoundTrip: boolean;
+};
+
+export const PRESET_HUBS: HubLocation[] = [
+  {
+    id: "peenya",
+    name: "Peenya Industrial Depot",
+    lat: 13.0287,
+    lng: 77.5199,
+    tag: "North-West Logistics Hub",
+    address: "Peenya Industrial Area Phase 1, Bengaluru",
+  },
+  {
+    id: "nelamangala",
+    name: "Nelamangala Highway Logistics Park",
+    lat: 13.0991,
+    lng: 77.3934,
+    tag: "NH-48 Freight Corridor",
+    address: "Tumkur Road, Nelamangala Hub, Bengaluru",
+  },
+  {
+    id: "airport",
+    name: "Kempegowda Int'l Airport (BLR Cargo)",
+    lat: 13.1986,
+    lng: 77.7066,
+    tag: "North Air Cargo Terminal",
+    address: "Cargo Village, Devanahalli, Bengaluru",
+  },
+  {
+    id: "whitefield",
+    name: "Whitefield Freight & Distribution Center",
+    lat: 12.9698,
+    lng: 77.75,
+    tag: "East Container Depot (ICD)",
+    address: "ITPL Main Rd, Whitefield, Bengaluru",
+  },
+  {
+    id: "ecity",
+    name: "Electronic City South Terminal",
+    lat: 12.8452,
+    lng: 77.6602,
+    tag: "South Express Hub",
+    address: "Hosur Road, Electronic City Phase 1, Bengaluru",
+  },
+  {
+    id: "majestic",
+    name: "Majestic Central Intermodal Depot",
+    lat: 12.9767,
+    lng: 77.5713,
+    tag: "City Core Railway Freight",
+    address: "Subhash Nagar, KSR Central, Bengaluru",
+  },
+  {
+    id: "yeshwanthpur",
+    name: "Yeshwanthpur Rail Freight Yard",
+    lat: 13.0234,
+    lng: 77.55,
+    tag: "Rail Freight Terminal",
+    address: "Yeshwanthpur Industrial Suburb, Bengaluru",
+  },
+  {
+    id: "bommasandra",
+    name: "Bommasandra Industrial Logistics Park",
+    lat: 12.8167,
+    lng: 77.6917,
+    tag: "South-East Industrial Hub",
+    address: "Bommasandra Industrial Area, Bengaluru",
+  },
+  {
+    id: "kengeri",
+    name: "Kengeri Mysore Road Terminal",
+    lat: 12.9166,
+    lng: 77.4826,
+    tag: "West Gateway Hub",
+    address: "Mysore Road, Kengeri Satellite Town, Bengaluru",
+  },
+];
+
+export const DEFAULT_NETWORK_CONFIG: NetworkConfig = {
+  pickupHub: PRESET_HUBS[0]!, // Peenya
+  destinationHub: PRESET_HUBS[0]!, // Peenya
+  isRoundTrip: true,
+};
+
+export function getActiveNodes(config: NetworkConfig = DEFAULT_NETWORK_CONFIG): Node[] {
+  const pickupNode: Node = {
+    id: "D0",
+    name: config.pickupHub.name,
+    lat: config.pickupHub.lat,
+    lng: config.pickupHub.lng,
+    demand: 0,
+  };
+
+  if (config.isRoundTrip || config.pickupHub.id === config.destinationHub.id) {
+    return [pickupNode, ...STOPS];
+  }
+
+  const destNode: Node = {
+    id: "DEST0",
+    name: config.destinationHub.name,
+    lat: config.destinationHub.lat,
+    lng: config.destinationHub.lng,
+    demand: 0,
+  };
+
+  return [pickupNode, ...STOPS, destNode];
+}
+
+export function getDestNodeIndex(config: NetworkConfig = DEFAULT_NETWORK_CONFIG): number {
+  if (config.isRoundTrip || config.pickupHub.id === config.destinationHub.id) {
+    return 0; // returns to pickup depot
+  }
+  return STOPS.length + 1; // 25 (the appended destination node)
+}
+
 export type Scenario = { accident: boolean; closure: boolean };
 
 const R = 6371;
@@ -67,15 +195,16 @@ export type Matrices = {
   congestion: number[][];
 };
 
-export function buildMatrices(scenario: Scenario): Matrices {
-  const n = ALL_NODES.length;
+export function buildMatrices(scenario: Scenario, customNodes?: Node[]): Matrices {
+  const nodes = customNodes ?? ALL_NODES;
+  const n = nodes.length;
   const dist: number[][] = [];
   const congestion: number[][] = [];
   for (let i = 0; i < n; i++) {
     dist[i] = [];
     congestion[i] = [];
     for (let j = 0; j < n; j++) {
-      const d = i === j ? 0 : haversine(ALL_NODES[i]!, ALL_NODES[j]!) * 1.32;
+      const d = i === j ? 0 : haversine(nodes[i]!, nodes[j]!) * 1.32;
       dist[i]![j] = d;
       let c = edgeCongestion(Math.min(i, j), Math.max(i, j));
       // Accident on the Marathahalli (5) – Whitefield (4) corridor
