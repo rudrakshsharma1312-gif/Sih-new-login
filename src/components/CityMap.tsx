@@ -102,6 +102,10 @@ export function CityMap({
   const drawnRef = useRef<google.maps.Polyline[]>([]);
   const markersRef = useRef<google.maps.Marker[]>([]);
   const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+  const interactiveLayerRef = useRef<SVGGElement | null>(null);
+  const cursorGlowRef = useRef<SVGCircleElement | null>(null);
+  const pointerFrameRef = useRef<number | null>(null);
+  const pointerTargetRef = useRef({ x: 0, y: 0, active: false });
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [mapMode, setMapMode] = useState<"google" | "vector">("google");
   const [hoveredNode, setHoveredNode] = useState<number | null>(null);
@@ -434,6 +438,39 @@ export function CityMap({
     return [lat, lng];
   };
 
+  const handleVectorPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    pointerTargetRef.current = {
+      x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
+      y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
+      active: true,
+    };
+
+    if (pointerFrameRef.current !== null) return;
+    pointerFrameRef.current = requestAnimationFrame(() => {
+      const { x, y, active } = pointerTargetRef.current;
+      interactiveLayerRef.current?.setAttribute(
+        "transform",
+        active ? `translate(${x * 4} ${y * 3})` : "translate(0 0)",
+      );
+      cursorGlowRef.current?.setAttribute("cx", `${400 + x * 170}`);
+      cursorGlowRef.current?.setAttribute("cy", `${300 + y * 130}`);
+      pointerFrameRef.current = null;
+    });
+  };
+
+  const resetVectorPointer = () => {
+    pointerTargetRef.current = { x: 0, y: 0, active: false };
+    if (pointerFrameRef.current === null) {
+      pointerFrameRef.current = requestAnimationFrame(() => {
+        interactiveLayerRef.current?.setAttribute("transform", "translate(0 0)");
+        cursorGlowRef.current?.setAttribute("cx", "400");
+        cursorGlowRef.current?.setAttribute("cy", "300");
+        pointerFrameRef.current = null;
+      });
+    }
+  };
+
   // Handle click on Vector SVG when in Pin Mode
   const handleSvgClick = async (e: React.MouseEvent<SVGSVGElement>) => {
     if (!activePinMode) return;
@@ -614,11 +651,13 @@ export function CityMap({
       {/* High-Precision Interactive Vector Graph Map */}
       {(status !== "ready" || mapMode === "vector") && (
         <div className="absolute inset-0 z-10 flex flex-col bg-void select-none transition-colors">
-          <svg
+            <svg
             viewBox="0 0 800 600"
-            className={`size-full ${activePinMode ? "cursor-crosshair" : ""}`}
+            className={`size-full touch-none ${activePinMode ? "cursor-crosshair" : "cursor-none sm:cursor-default"}`}
             preserveAspectRatio="xMidYMid meet"
             onClick={handleSvgClick}
+            onPointerMove={handleVectorPointerMove}
+            onPointerLeave={resetVectorPointer}
           >
             <defs>
               <filter id={`glow-${gradientId}`} x="-20%" y="-20%" width="140%" height="140%">
@@ -628,6 +667,10 @@ export function CityMap({
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
+              <radialGradient id={`cursorGlow-${gradientId}`} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor={theme === "light" ? "#f59e0b" : "#ffd358"} stopOpacity="0.12" />
+                <stop offset="100%" stopColor={theme === "light" ? "#f59e0b" : "#ffd358"} stopOpacity="0" />
+              </radialGradient>
               <linearGradient
                 id={`cubeTopEmerald-${gradientId}`}
                 x1="0%"
@@ -652,6 +695,16 @@ export function CityMap({
 
             {/* Base Background & Architectural Grid */}
             <rect width="800" height="600" fill="currentColor" className="text-void" />
+            <circle
+              ref={cursorGlowRef}
+              cx="400"
+              cy="300"
+              r="150"
+              fill={`url(#cursorGlow-${gradientId})`}
+              opacity="0.7"
+              className="pointer-events-none transition-opacity duration-300"
+            />
+            <g ref={interactiveLayerRef} style={{ transformOrigin: "400px 300px", transition: "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)" }}>
 
             {/* City district silhouettes */}
             <g
@@ -909,6 +962,7 @@ export function CityMap({
                 </g>
               );
             })}
+            </g>
           </svg>
 
           {/* Map Footer status overlay */}
