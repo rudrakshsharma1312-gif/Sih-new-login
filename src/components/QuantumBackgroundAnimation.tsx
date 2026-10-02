@@ -95,7 +95,8 @@ export function QuantumBackgroundAnimation({
         maxRadius: Math.max(width, height) * 1.1,
         speed: 2.2 + i * 0.45,
         alpha: variant === "intro" ? 0.75 - i * 0.1 : 0.35 - i * 0.08,
-        color: palette[i % palette.length],
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        color: palette[i % palette.length]!,
         lineWidth: 1.5 + (waveCount - i) * 0.4,
       });
     }
@@ -132,7 +133,9 @@ export function QuantumBackgroundAnimation({
     ];
 
     for (let i = 0; i < particleCount; i++) {
-      const attractor = attractors[i % attractors.length];
+      // attractors has 5 elements, i % attractors.length is always in-bounds
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const attractor = attractors[i % attractors.length]!;
       const orbitRad = 40 + Math.random() * (width > 768 ? 220 : 130);
       const angle = Math.random() * Math.PI * 2;
 
@@ -142,7 +145,8 @@ export function QuantumBackgroundAnimation({
         vx: (Math.random() - 0.5) * 0.7,
         vy: (Math.random() - 0.5) * 0.7,
         baseRadius: 1.5 + Math.random() * 2.2,
-        color: palette[Math.floor(Math.random() * palette.length)],
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        color: palette[Math.floor(Math.random() * palette.length)]!,
         alpha: 0.3 + Math.random() * 0.5,
         phase: Math.random() * Math.PI * 2,
         spin: (Math.random() - 0.5) * 0.03,
@@ -175,7 +179,8 @@ export function QuantumBackgroundAnimation({
       attractors[4] = { x: width * 0.65, y: height * 0.68 };
 
       particles.forEach((p, idx) => {
-        const attractor = attractors[idx % attractors.length];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const attractor = attractors[idx % attractors.length]!;
         p.originX = attractor.x;
         p.originY = attractor.y;
       });
@@ -190,7 +195,8 @@ export function QuantumBackgroundAnimation({
 
       // 1. Draw Upper Wave Rings (Only active for first few seconds, then finishes and fades out)
       for (let i = upperWaves.length - 1; i >= 0; i--) {
-        const wave = upperWaves[i];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const wave = upperWaves[i]!;
         wave.radius += wave.speed;
         const progress = wave.radius / wave.maxRadius;
         const currentAlpha = Math.max(0, wave.alpha * (1 - progress));
@@ -221,7 +227,8 @@ export function QuantumBackgroundAnimation({
 
       // 2. Draw Continuous Lower Wave Rings (Moves as it is continuously)
       for (let i = lowerWaves.length - 1; i >= 0; i--) {
-        const wave = lowerWaves[i];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const wave = lowerWaves[i]!;
         wave.radius += wave.speed;
         const progress = wave.radius / wave.maxRadius;
         const currentAlpha = Math.max(0, wave.alpha * (1 - progress));
@@ -275,25 +282,29 @@ export function QuantumBackgroundAnimation({
       const maxConnectDistance = width > 768 ? 135 : 90;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const pi = particles[i]!;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const pj = particles[j]!;
+          const dx = pi.x - pj.x;
+          const dy = pi.y - pj.y;
           const dist = Math.hypot(dx, dy);
 
           if (dist < maxConnectDistance) {
             const filamentAlpha = (1 - dist / maxConnectDistance) * (isDark ? 0.22 : 0.12);
             ctx.save();
             ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `${particles[i].color} ${filamentAlpha})`;
+            ctx.moveTo(pi.x, pi.y);
+            ctx.lineTo(pj.x, pj.y);
+            ctx.strokeStyle = `${pi.color} ${filamentAlpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
 
             // Occasional quantum photon pulse packet traveling along the filament
             if ((frame + i * 11) % 80 === 0) {
               const t = (frame % 80) / 80;
-              const px = particles[i].x + dx * -t;
-              const py = particles[i].y + dy * -t;
+              const px = pi.x + dx * -t;
+              const py = pi.y + dy * -t;
               ctx.beginPath();
               ctx.arc(px, py, 1.8, 0, Math.PI * 2);
               ctx.fillStyle = `${emberColor} 0.85)`;
@@ -308,7 +319,8 @@ export function QuantumBackgroundAnimation({
 
       // 4. Update and Render Quantum Particles
       for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const p = particles[i]!;
 
         // Orbit around attractor with quantum harmonic perturbation
         p.orbitAngle += p.orbitSpeed;

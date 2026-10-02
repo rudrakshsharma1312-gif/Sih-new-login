@@ -3,7 +3,7 @@
  * Communicates with TanStack Start/Nitro server API endpoints.
  */
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) || "";
+const API_BASE_URL = (import.meta.env["VITE_API_BASE_URL"] as string | undefined) || "";
 
 export interface ApiResponse<T = unknown> {
   success: boolean;

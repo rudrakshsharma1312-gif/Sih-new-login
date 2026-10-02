@@ -224,7 +224,7 @@ function IncidentRow({
   incident: LiveIncident;
   resolved?: boolean;
 }) {
-  const styles = SEVERITY_STYLES[incident.severity] ?? SEVERITY_STYLES.info!;
+  const styles = SEVERITY_STYLES[incident.severity] ?? SEVERITY_STYLES["info"]!;
 
   return (
     <div className={`flex items-start gap-3 px-4 py-3 ${resolved ? "opacity-50" : ""}`}>

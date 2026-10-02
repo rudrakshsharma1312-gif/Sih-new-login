@@ -219,13 +219,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const data = docSnap.data();
             compDocs.push({
               id: docSnap.id,
-              companyName: data.companyName ?? "Egreen Quanta Fleet",
-              managerName: data.managerName ?? "Dr. Rajesh Sharma",
-              managerId: data.managerId ?? `mgr-${docSnap.id}`,
-              password: data.password ?? "manager123",
-              mobile: data.mobile ?? "",
-              driverCount: typeof data.driverCount === "number" ? data.driverCount : 5,
-              createdAt: data.createdAt ?? new Date().toISOString(),
+              companyName: (data["companyName"] as string | undefined) ?? "Egreen Quanta Fleet",
+              managerName: (data["managerName"] as string | undefined) ?? "Dr. Rajesh Sharma",
+              managerId: (data["managerId"] as string | undefined) ?? `mgr-${docSnap.id}`,
+              password: (data["password"] as string | undefined) ?? "manager123",
+              mobile: (data["mobile"] as string | undefined) ?? "",
+              driverCount: typeof data["driverCount"] === "number" ? (data["driverCount"] as number) : 5,
+              createdAt: (data["createdAt"] as string | undefined) ?? new Date().toISOString(),
             });
           });
 
@@ -253,27 +253,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const loaded: DriverUser[] = [];
           dSnap.forEach((docSnap) => {
             const data = docSnap.data();
-            const compName = data.companyName ?? "Egreen Quanta Fleet";
+            const compName = (data["companyName"] as string | undefined) ?? "Egreen Quanta Fleet";
             const mgrName =
-              data.managerName ??
+              (data["managerName"] as string | undefined) ??
               (compName === "Egreen Quanta Fleet" ? "Dr. Rajesh Sharma" : "Fleet Manager");
-            const regBy = data.registeredBy ?? `${mgrName} (${compName})`;
+            const regBy = (data["registeredBy"] as string | undefined) ?? `${mgrName} (${compName})`;
+            const vehicleIndexRaw = data["vehicleIndex"];
+            const customRouteRaw = data["customRoute"];
+            const statusRaw = data["status"] as string | undefined;
 
-            loaded.push({
+            const driver: DriverUser = {
               id: docSnap.id,
               role: "driver",
-              driverName: data.driverName ?? "Driver",
-              mobileNo: data.mobileNo ?? "",
-              password: data.password ?? "driver123",
+              driverName: (data["driverName"] as string | undefined) ?? "Driver",
+              mobileNo: (data["mobileNo"] as string | undefined) ?? "",
+              password: (data["password"] as string | undefined) ?? "driver123",
               companyName: compName,
               managerName: mgrName,
-              managerId: data.managerId,
               registeredBy: regBy,
-              vehicleIndex: typeof data.vehicleIndex === "number" ? data.vehicleIndex : 0,
-              customRoute: Array.isArray(data.customRoute) ? data.customRoute : undefined,
-              status: data.status ?? "En Route",
-              createdAt: data.createdAt ?? new Date().toISOString(),
-            });
+              vehicleIndex: typeof vehicleIndexRaw === "number" ? vehicleIndexRaw : 0,
+              status: (statusRaw === "Active" || statusRaw === "En Route" || statusRaw === "Standby") ? statusRaw : "En Route",
+              createdAt: (data["createdAt"] as string | undefined) ?? new Date().toISOString(),
+            };
+            const managerIdRaw = data["managerId"] as string | undefined;
+            if (managerIdRaw !== undefined) driver.managerId = managerIdRaw;
+            if (Array.isArray(customRouteRaw)) driver.customRoute = customRouteRaw as number[];
+            loaded.push(driver);
           });
 
           // Ensure seed drivers exist if database is fresh
@@ -716,9 +721,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: false, error: "Driver not found in registry." };
     }
 
+    // With exactOptionalPropertyTypes, we must omit customRoute rather than set it to undefined
+    const { customRoute: _omit, ...targetWithoutRoute } = target;
     const updatedDriver: DriverUser = {
-      ...target,
-      customRoute: undefined,
+      ...targetWithoutRoute,
     };
 
     const updatedList = allDrivers.map((d) => (d.id === driverId ? updatedDriver : d));

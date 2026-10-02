@@ -277,8 +277,8 @@ export async function handleApiRequest(request: Request): Promise<Response> {
       }
 
       const identifier =
-        typeof body.identifier === "string" ? body.identifier.trim().toLowerCase() : "";
-      const password = typeof body.password === "string" ? body.password.trim() : "";
+        typeof body["identifier"] === "string" ? body["identifier"].trim().toLowerCase() : "";
+      const password = typeof body["password"] === "string" ? body["password"].trim() : "";
 
       if (!identifier || !password) {
         return errorResponse(
@@ -326,9 +326,9 @@ export async function handleApiRequest(request: Request): Promise<Response> {
         return errorResponse("Invalid JSON payload", 400, undefined, origin);
       }
 
-      const rawMobile = typeof body.mobileNo === "string" ? body.mobileNo.trim() : "";
+      const rawMobile = typeof body["mobileNo"] === "string" ? body["mobileNo"].trim() : "";
       const cleanMobile = rawMobile.replace(/\D/g, "");
-      const password = typeof body.password === "string" ? body.password.trim() : "";
+      const password = typeof body["password"] === "string" ? body["password"].trim() : "";
 
       if (!cleanMobile) {
         return errorResponse("Registered mobile number is required", 400, undefined, origin);

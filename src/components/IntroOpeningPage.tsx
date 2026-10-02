@@ -80,14 +80,16 @@ export function IntroOpeningPage() {
     const res = await signupManager({
       companyName: signupCompany,
       managerName: signupManagerName,
-      mobileNo: signupMobile,
+      mobile: signupMobile,
       password: signupPassword,
+      driverCount: 0,
+      drivers: [],
     });
 
-    if (res.success && res.manager) {
+    if (res.success) {
       setSuccessMsg("Company account created successfully.");
       setTab("manager-login");
-      setMgrIdentifier(res.manager.companyName);
+      setMgrIdentifier(signupCompany);
       setMgrPassword(signupPassword);
     } else {
       setError(res.error ?? "Failed to create company account.");
@@ -108,10 +110,10 @@ export function IntroOpeningPage() {
       managerName: singleDriverManager,
     });
 
-    if (res.success && res.driver) {
-      setSuccessMsg(`Driver ${res.driver.driverName} registered successfully.`);
+    if (res.success) {
+      setSuccessMsg(`Driver ${singleDriverName} registered successfully.`);
       setTab("driver-login");
-      setDriverMobile(res.driver.mobileNo);
+      setDriverMobile(singleDriverMobile);
       setDriverPassword(singleDriverPassword);
     } else {
       setError(res.error ?? "Failed to register driver.");

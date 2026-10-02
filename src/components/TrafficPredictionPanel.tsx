@@ -23,7 +23,7 @@ export function TrafficPredictionPanel({ className = "" }: TrafficPredictionPane
   const [currentHour, setCurrentHour] = useState(getISTHour());
   const [currentPrediction, setCurrentPrediction] = useState<TrafficPrediction | null>(null);
 
-  const zone: ZoneProfile = BENGALURU_ZONES[selectedZone] ?? BENGALURU_ZONES.outer_ring!;
+  const zone: ZoneProfile = BENGALURU_ZONES[selectedZone] ?? BENGALURU_ZONES["outer_ring"]!;
 
   useEffect(() => {
     const data = generateDailyForecast(zone);

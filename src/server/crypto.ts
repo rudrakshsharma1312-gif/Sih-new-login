@@ -24,8 +24,9 @@ export function verifyPassword(password: string, storedHash?: string): boolean {
   // Format salt:hash
   if (storedHash.includes(":")) {
     const parts = storedHash.split(":");
-    if (parts.length === 2 && parts[0] && parts[1]) {
-      const [salt, hash] = parts;
+    const salt = parts[0];
+    const hash = parts[1];
+    if (parts.length === 2 && salt && hash) {
       try {
         const computed = scryptSync(password, salt, 32).toString("hex");
         return computed === hash;
@@ -36,7 +37,7 @@ export function verifyPassword(password: string, storedHash?: string): boolean {
   }
 
   // Only allow fallback passwords in development/demo mode
-  const allowFallbacks = process.env.DISABLE_AUTH_FALLBACKS !== "true";
+  const allowFallbacks = process.env["DISABLE_AUTH_FALLBACKS"] !== "true";
 
   if (allowFallbacks) {
     // Backward compatibility fallback for pre-existing demo entries

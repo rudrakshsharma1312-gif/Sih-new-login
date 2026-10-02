@@ -68,7 +68,7 @@ export function ScenarioComparator({ className = "" }: ScenarioComparatorProps) 
   for (const metric of metrics) {
     const values = snapshots
       .filter((s) => s.qpso)
-      .map((s) => (s.qpso!.best as Record<string, number>)[metric.key] as number);
+      .map((s) => (s.qpso!.best as unknown as Record<string, number>)[metric.key] as number);
     if (values.length > 0) {
       bestPerMetric[metric.key] = metric.lowerBetter ? Math.min(...values) : Math.max(...values);
     }
@@ -173,7 +173,7 @@ export function ScenarioComparator({ className = "" }: ScenarioComparatorProps) 
                         </td>
                       );
                     }
-                    const val = (s.qpso.best as Record<string, number>)[metric.key] as number;
+                    const val = (s.qpso.best as unknown as Record<string, number>)[metric.key] as number;
                     const isBest = bestPerMetric[metric.key] === val;
                     return (
                       <td key={s.id} className="py-2 text-right">

@@ -151,7 +151,7 @@ export function HubSelectorBar({
       <HubLocationModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onStartMapPinPick={onStartMapPinPick}
+        {...(onStartMapPinPick ? { onStartMapPinPick } : {})}
       />
     </>
   );

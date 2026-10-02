@@ -48,7 +48,7 @@ function gaussian(x: number, mu: number, sigma: number): number {
  */
 export function predictCongestion(
   hour: number,
-  zone: ZoneProfile = BENGALURU_ZONES.outer_ring!,
+  zone: ZoneProfile = BENGALURU_ZONES["outer_ring"]!,
 ): TrafficPrediction {
   // Base free-flow
   let C = 1.0;
@@ -114,7 +114,7 @@ export function predictCongestion(
 
 /** Generate a full 24-hour traffic forecast */
 export function generateDailyForecast(
-  zone: ZoneProfile = BENGALURU_ZONES.outer_ring!,
+  zone: ZoneProfile = BENGALURU_ZONES["outer_ring"]!,
 ): TrafficPrediction[] {
   return Array.from({ length: 24 }, (_, h) => predictCongestion(h, zone));
 }
