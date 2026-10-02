@@ -70,11 +70,7 @@ function OptimizerPage() {
 
   return (
     <section className="pb-20">
-      <PageHead
-        kicker="Optimizer"
-        title="Solver Parameters"
-        aside="QPSO Configuration"
-      />
+      <PageHead kicker="Optimizer" title="Solver Parameters" aside="QPSO Configuration" />
       <HubSelectorBar className="mb-4" />
       <div className="grid gap-4 lg:grid-cols-12">
         <div className="lg:col-span-4">

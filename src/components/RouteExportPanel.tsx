@@ -112,11 +112,7 @@ export function RouteExportPanel({ className = "" }: RouteExportPanelProps) {
 
   const handleExportCSV = () => {
     if (!qpso) return;
-    downloadFile(
-      generateRouteCSV(qpso.best),
-      `quanta-routes-${timestamp}.csv`,
-      "text/csv",
-    );
+    downloadFile(generateRouteCSV(qpso.best), `quanta-routes-${timestamp}.csv`, "text/csv");
   };
 
   const handleExportBriefing = () => {
@@ -189,13 +185,9 @@ export function RouteExportPanel({ className = "" }: RouteExportPanelProps) {
               onClick={handleExportJSON}
               className="flex flex-col items-center gap-1.5 rounded-xl border border-line bg-glass/40 px-3 py-3 text-center transition hover:border-ember hover:bg-ember/5"
             >
-              <span className="text-lg">{ }</span>
-              <span className="font-mono text-[10px] font-bold text-foreground">
-                Export JSON
-              </span>
-              <span className="font-mono text-[9px] text-mist">
-                Full route data + metadata
-              </span>
+              <span className="text-lg">{}</span>
+              <span className="font-mono text-[10px] font-bold text-foreground">Export JSON</span>
+              <span className="font-mono text-[9px] text-mist">Full route data + metadata</span>
             </button>
 
             <button
@@ -203,12 +195,8 @@ export function RouteExportPanel({ className = "" }: RouteExportPanelProps) {
               className="flex flex-col items-center gap-1.5 rounded-xl border border-line bg-glass/40 px-3 py-3 text-center transition hover:border-emerald-500/50 hover:bg-emerald-950/10"
             >
               <span className="text-lg">📋</span>
-              <span className="font-mono text-[10px] font-bold text-foreground">
-                Export CSV
-              </span>
-              <span className="font-mono text-[9px] text-mist">
-                Stop-by-stop spreadsheet
-              </span>
+              <span className="font-mono text-[10px] font-bold text-foreground">Export CSV</span>
+              <span className="font-mono text-[9px] text-mist">Stop-by-stop spreadsheet</span>
             </button>
 
             <button
@@ -229,12 +217,8 @@ export function RouteExportPanel({ className = "" }: RouteExportPanelProps) {
               className="flex flex-col items-center gap-1.5 rounded-xl border border-line bg-glass/40 px-3 py-3 text-center transition hover:border-violet-500/50 hover:bg-violet-950/10"
             >
               <span className="text-lg">📎</span>
-              <span className="font-mono text-[10px] font-bold text-foreground">
-                Copy JSON
-              </span>
-              <span className="font-mono text-[9px] text-mist">
-                Copy to clipboard
-              </span>
+              <span className="font-mono text-[10px] font-bold text-foreground">Copy JSON</span>
+              <span className="font-mono text-[9px] text-mist">Copy to clipboard</span>
             </button>
           </div>
 
@@ -245,9 +229,7 @@ export function RouteExportPanel({ className = "" }: RouteExportPanelProps) {
                 <span className="font-mono text-[9px] font-bold text-ember">
                   Vehicle #{idx + 1}:{" "}
                 </span>
-                <span className="font-mono text-[9px] text-mist">
-                  {formatRoute(route)}
-                </span>
+                <span className="font-mono text-[9px] text-mist">{formatRoute(route)}</span>
               </div>
             ))}
           </div>

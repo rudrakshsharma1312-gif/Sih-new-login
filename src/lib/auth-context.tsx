@@ -224,7 +224,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               managerId: (data["managerId"] as string | undefined) ?? `mgr-${docSnap.id}`,
               password: (data["password"] as string | undefined) ?? "manager123",
               mobile: (data["mobile"] as string | undefined) ?? "",
-              driverCount: typeof data["driverCount"] === "number" ? (data["driverCount"] as number) : 5,
+              driverCount:
+                typeof data["driverCount"] === "number" ? (data["driverCount"] as number) : 5,
               createdAt: (data["createdAt"] as string | undefined) ?? new Date().toISOString(),
             });
           });
@@ -257,7 +258,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const mgrName =
               (data["managerName"] as string | undefined) ??
               (compName === "Egreen Quanta Fleet" ? "Dr. Rajesh Sharma" : "Fleet Manager");
-            const regBy = (data["registeredBy"] as string | undefined) ?? `${mgrName} (${compName})`;
+            const regBy =
+              (data["registeredBy"] as string | undefined) ?? `${mgrName} (${compName})`;
             const vehicleIndexRaw = data["vehicleIndex"];
             const customRouteRaw = data["customRoute"];
             const statusRaw = data["status"] as string | undefined;
@@ -272,7 +274,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               managerName: mgrName,
               registeredBy: regBy,
               vehicleIndex: typeof vehicleIndexRaw === "number" ? vehicleIndexRaw : 0,
-              status: (statusRaw === "Active" || statusRaw === "En Route" || statusRaw === "Standby") ? statusRaw : "En Route",
+              status:
+                statusRaw === "Active" || statusRaw === "En Route" || statusRaw === "Standby"
+                  ? statusRaw
+                  : "En Route",
               createdAt: (data["createdAt"] as string | undefined) ?? new Date().toISOString(),
             };
             const managerIdRaw = data["managerId"] as string | undefined;

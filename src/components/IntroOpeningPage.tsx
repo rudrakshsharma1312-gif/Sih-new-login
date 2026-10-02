@@ -155,9 +155,7 @@ export function IntroOpeningPage() {
               <span className="font-display text-lg font-bold tracking-tight text-foreground">
                 QUANTA
               </span>
-              <p className="font-mono text-[10px] text-faint">
-                Fleet Route Command
-              </p>
+              <p className="font-mono text-[10px] text-faint">Fleet Route Command</p>
             </div>
           </div>
 
@@ -188,7 +186,11 @@ export function IntroOpeningPage() {
             <div className="mb-6 flex space-x-1 rounded-md bg-void p-1 font-mono text-[11px]">
               <button
                 type="button"
-                onClick={() => { setTab("manager-login"); setError(null); setSuccessMsg(null); }}
+                onClick={() => {
+                  setTab("manager-login");
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
                 className={`flex-1 rounded-md py-2 font-medium transition ${
                   tab === "manager-login" ? "bg-ember text-void" : "text-mist hover:text-foreground"
                 }`}
@@ -197,7 +199,11 @@ export function IntroOpeningPage() {
               </button>
               <button
                 type="button"
-                onClick={() => { setTab("driver-login"); setError(null); setSuccessMsg(null); }}
+                onClick={() => {
+                  setTab("driver-login");
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
                 className={`flex-1 rounded-md py-2 font-medium transition ${
                   tab === "driver-login" ? "bg-ember text-void" : "text-mist hover:text-foreground"
                 }`}
@@ -206,9 +212,15 @@ export function IntroOpeningPage() {
               </button>
               <button
                 type="button"
-                onClick={() => { setTab("manager-signup"); setError(null); setSuccessMsg(null); }}
+                onClick={() => {
+                  setTab("manager-signup");
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
                 className={`flex-1 rounded-md py-2 font-medium transition ${
-                  tab === "manager-signup" ? "bg-ember text-void" : "text-mist hover:text-foreground"
+                  tab === "manager-signup"
+                    ? "bg-ember text-void"
+                    : "text-mist hover:text-foreground"
                 }`}
               >
                 New Fleet
@@ -231,7 +243,9 @@ export function IntroOpeningPage() {
             {tab === "manager-login" && (
               <form onSubmit={handleManagerLogin} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-mist mb-1">Company / Username</label>
+                  <label className="block text-xs font-medium text-mist mb-1">
+                    Company / Username
+                  </label>
                   <input
                     type="text"
                     required
@@ -295,7 +309,10 @@ export function IntroOpeningPage() {
 
             {/* TAB 3: Manager Sign Up */}
             {tab === "manager-signup" && (
-              <form onSubmit={handleManagerSignup} className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+              <form
+                onSubmit={handleManagerSignup}
+                className="space-y-4 max-h-[300px] overflow-y-auto pr-2"
+              >
                 <div>
                   <label className="block text-xs font-medium text-mist mb-1">Company Name</label>
                   <input
@@ -348,7 +365,10 @@ export function IntroOpeningPage() {
 
             {/* TAB 4: Driver Sign Up */}
             {tab === "driver-signup" && (
-              <form onSubmit={handleDriverSignup} className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+              <form
+                onSubmit={handleDriverSignup}
+                className="space-y-4 max-h-[300px] overflow-y-auto pr-2"
+              >
                 <div>
                   <label className="block text-xs font-medium text-mist mb-1">Driver Name</label>
                   <input
@@ -391,7 +411,9 @@ export function IntroOpeningPage() {
           </div>
 
           <div className="mt-8">
-            <p className="font-mono text-[10px] uppercase text-mist mb-3 text-center">Quick Demo Access</p>
+            <p className="font-mono text-[10px] uppercase text-mist mb-3 text-center">
+              Quick Demo Access
+            </p>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={handleQuickManagerDemo}

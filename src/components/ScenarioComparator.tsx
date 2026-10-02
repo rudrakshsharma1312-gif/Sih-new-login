@@ -117,7 +117,8 @@ export function ScenarioComparator({ className = "" }: ScenarioComparatorProps) 
         <div className="mt-6 py-6 text-center">
           <p className="text-2xl">💾</p>
           <p className="mt-2 font-mono text-xs text-mist">
-            Run the optimizer, then save snapshots to compare across accident/closure/normal scenarios
+            Run the optimizer, then save snapshots to compare across accident/closure/normal
+            scenarios
           </p>
         </div>
       )}
@@ -173,7 +174,9 @@ export function ScenarioComparator({ className = "" }: ScenarioComparatorProps) 
                         </td>
                       );
                     }
-                    const val = (s.qpso.best as unknown as Record<string, number>)[metric.key] as number;
+                    const val = (s.qpso.best as unknown as Record<string, number>)[
+                      metric.key
+                    ] as number;
                     const isBest = bestPerMetric[metric.key] === val;
                     return (
                       <td key={s.id} className="py-2 text-right">
@@ -199,9 +202,7 @@ export function ScenarioComparator({ className = "" }: ScenarioComparatorProps) 
               ))}
               {/* Runtime row */}
               <tr className="border-b border-line/30">
-                <td className="py-2 text-[9px] uppercase tracking-wider text-mist">
-                  Solve Time
-                </td>
+                <td className="py-2 text-[9px] uppercase tracking-wider text-mist">Solve Time</td>
                 {snapshots.map((s) => (
                   <td key={s.id} className="py-2 text-right text-foreground">
                     {s.qpso ? `${s.qpso.runtimeMs}ms` : "—"}
@@ -210,9 +211,7 @@ export function ScenarioComparator({ className = "" }: ScenarioComparatorProps) 
               </tr>
               {/* Convergence row */}
               <tr>
-                <td className="py-2 text-[9px] uppercase tracking-wider text-mist">
-                  Converged At
-                </td>
+                <td className="py-2 text-[9px] uppercase tracking-wider text-mist">Converged At</td>
                 {snapshots.map((s) => (
                   <td key={s.id} className="py-2 text-right text-foreground">
                     {s.qpso ? `it.${s.qpso.convergedAt}` : "—"}

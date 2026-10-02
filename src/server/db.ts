@@ -87,8 +87,10 @@ export async function fetchCompanies(): Promise<CompanyEntity[]> {
         createdAt: (data["createdAt"] as string | undefined) ?? new Date().toISOString(),
       };
       if (data["password"] !== undefined) entity.password = data["password"] as string;
-      if (data["mobile"] !== undefined) entity.mobile = (data["mobile"] as string | undefined) ?? "";
-      if (data["driverCount"] !== undefined) entity.driverCount = (data["driverCount"] as number | undefined) ?? 5;
+      if (data["mobile"] !== undefined)
+        entity.mobile = (data["mobile"] as string | undefined) ?? "";
+      if (data["driverCount"] !== undefined)
+        entity.driverCount = (data["driverCount"] as number | undefined) ?? 5;
       companies.push(entity);
     });
     return companies;
@@ -111,7 +113,8 @@ export async function fetchCompanyById(id: string): Promise<CompanyEntity | null
     };
     if (data["password"] !== undefined) entity.password = data["password"] as string;
     if (data["mobile"] !== undefined) entity.mobile = (data["mobile"] as string | undefined) ?? "";
-    if (data["driverCount"] !== undefined) entity.driverCount = (data["driverCount"] as number | undefined) ?? 5;
+    if (data["driverCount"] !== undefined)
+      entity.driverCount = (data["driverCount"] as number | undefined) ?? 5;
     return entity;
   } catch (error) {
     console.warn(`fetchCompanyById error (${id}):`, error);

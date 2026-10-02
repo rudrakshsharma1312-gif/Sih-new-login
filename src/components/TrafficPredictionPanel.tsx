@@ -160,9 +160,7 @@ export function TrafficPredictionPanel({ className = "" }: TrafficPredictionPane
             </p>
             <p className="mt-1 font-mono text-[9px] text-mist">
               Model confidence:{" "}
-              <span className="text-emerald-400 font-bold">
-                {currentPrediction.confidencePct}%
-              </span>
+              <span className="text-emerald-400 font-bold">{currentPrediction.confidencePct}%</span>
             </p>
           </div>
         )}

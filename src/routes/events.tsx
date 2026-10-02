@@ -35,11 +35,7 @@ function EventsPage() {
 
   return (
     <section className="pb-20">
-      <PageHead
-        kicker="Events"
-        title="Network Disruptions"
-        aside="Auto re-solve on event"
-      />
+      <PageHead kicker="Events" title="Network Disruptions" aside="Auto re-solve on event" />
 
       {/* Manual Scenario Controls */}
       <div className="grid gap-4 md:grid-cols-3 mb-6">

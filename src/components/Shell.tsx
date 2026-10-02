@@ -20,9 +20,7 @@ export function PageHead({
         <p className="font-mono text-[10px] uppercase tracking-wider text-faint">{kicker}</p>
         <h1 className="mt-0.5 font-display text-xl font-semibold tracking-tight">{title}</h1>
       </div>
-      {aside ? (
-        <span className="font-mono text-[10px] text-faint">{aside}</span>
-      ) : null}
+      {aside ? <span className="font-mono text-[10px] text-faint">{aside}</span> : null}
     </div>
   );
 }

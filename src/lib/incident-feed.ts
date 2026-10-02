@@ -14,10 +14,10 @@ export interface LiveIncident {
   title: string;
   location: string;
   severity: IncidentSeverity;
-  impactedNodes: string[];        // Node IDs affected
-  congestionBoost: number;        // multiplier boost applied to affected edges
-  ttlMs: number;                  // Time-to-live in ms before auto-resolve
-  source: string;                 // "BMLTA", "IoT-Sensor", "BBMP", "Crowdsource"
+  impactedNodes: string[]; // Node IDs affected
+  congestionBoost: number; // multiplier boost applied to affected edges
+  ttlMs: number; // Time-to-live in ms before auto-resolve
+  source: string; // "BMLTA", "IoT-Sensor", "BBMP", "Crowdsource"
   icon: string;
   resolved: boolean;
 }

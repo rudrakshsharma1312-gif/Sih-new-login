@@ -16,26 +16,26 @@
 
 export interface TrafficPrediction {
   hour: number;
-  congestionMultiplier: number;     // 1.0 = free flow, 2.5 = severe
-  confidencePct: number;            // Model confidence %
-  label: string;                    // Human-readable status
-  color: string;                    // UI color
-  recommendedAction: string;        // Optimization recommendation
+  congestionMultiplier: number; // 1.0 = free flow, 2.5 = severe
+  confidencePct: number; // Model confidence %
+  label: string; // Human-readable status
+  color: string; // UI color
+  recommendedAction: string; // Optimization recommendation
 }
 
 export interface ZoneProfile {
   name: string;
-  amPeakMod: number;   // multiplicative on AM peak intensity
-  pmPeakMod: number;   // multiplicative on PM peak intensity
+  amPeakMod: number; // multiplicative on AM peak intensity
+  pmPeakMod: number; // multiplicative on PM peak intensity
 }
 
 // Bengaluru zone profiles — derived from typical inner-city vs outer-ring patterns
 export const BENGALURU_ZONES: Record<string, ZoneProfile> = {
-  inner_core:    { name: "Inner Core (MG Road, Majestic)",    amPeakMod: 1.4, pmPeakMod: 1.5 },
-  outer_ring:    { name: "Outer Ring Road (Marathahalli)",    amPeakMod: 1.2, pmPeakMod: 1.35 },
-  north_corridor:{ name: "North Corridor (Peenya–Hebbal)",   amPeakMod: 1.15, pmPeakMod: 1.2 },
-  tech_belt:     { name: "Tech Belt (Whitefield–ECo)",        amPeakMod: 1.3, pmPeakMod: 1.6 },
-  south_suburb:  { name: "South Suburb (Banashankari–JP Ngr)",amPeakMod: 1.0, pmPeakMod: 1.15 },
+  inner_core: { name: "Inner Core (MG Road, Majestic)", amPeakMod: 1.4, pmPeakMod: 1.5 },
+  outer_ring: { name: "Outer Ring Road (Marathahalli)", amPeakMod: 1.2, pmPeakMod: 1.35 },
+  north_corridor: { name: "North Corridor (Peenya–Hebbal)", amPeakMod: 1.15, pmPeakMod: 1.2 },
+  tech_belt: { name: "Tech Belt (Whitefield–ECo)", amPeakMod: 1.3, pmPeakMod: 1.6 },
+  south_suburb: { name: "South Suburb (Banashankari–JP Ngr)", amPeakMod: 1.0, pmPeakMod: 1.15 },
 };
 
 /** Gaussian kernel */

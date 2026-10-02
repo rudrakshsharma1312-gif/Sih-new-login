@@ -31,11 +31,7 @@ function BenchmarkPage() {
 
   return (
     <section className="pb-20">
-      <PageHead
-        kicker="Benchmark"
-        title="Algorithm Comparison"
-        aside="4 algorithms · 25 nodes"
-      />
+      <PageHead kicker="Benchmark" title="Algorithm Comparison" aside="4 algorithms · 25 nodes" />
       <HubSelectorBar className="mb-4" />
       <div className="flex flex-col gap-4">
         <ConvergenceChart runs={runs} progress={progress} />

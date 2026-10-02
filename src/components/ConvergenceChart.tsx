@@ -36,14 +36,10 @@ export function ConvergenceChart({ runs, progress }: Props) {
   return (
     <div className="panel relative flex flex-col p-4">
       <div className="flex items-start justify-between">
-        <h3 className="font-display text-sm font-semibold">
-          Convergence
-        </h3>
+        <h3 className="font-display text-sm font-semibold">Convergence</h3>
         {qpso && (
           <div className="text-right">
-            <p className="font-mono text-[10px] text-faint">
-              Best fitness
-            </p>
+            <p className="font-mono text-[10px] text-faint">Best fitness</p>
             <p className="font-mono text-sm text-foreground">{qpso.best.fitness.toFixed(3)}</p>
           </div>
         )}

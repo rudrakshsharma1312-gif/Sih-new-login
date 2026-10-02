@@ -8,9 +8,7 @@ export function BenchmarkTable({ runs }: { runs: Partial<Record<AlgorithmId, Run
   return (
     <div className="panel relative overflow-hidden p-4">
       <div className="flex items-end justify-between mb-4">
-        <h3 className="font-display text-sm font-semibold">
-          Results
-        </h3>
+        <h3 className="font-display text-sm font-semibold">Results</h3>
         <span className="font-mono text-[10px] text-faint">
           {Object.keys(runs).length} algorithms
         </span>

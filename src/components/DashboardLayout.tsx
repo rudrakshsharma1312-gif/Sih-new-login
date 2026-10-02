@@ -54,8 +54,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     ? `Vehicle #${(driverUser?.vehicleIndex ?? 0) + 1}`
     : currentPath === "/"
       ? "Overview"
-      : MANAGER_NAV.find((n) => currentPath.startsWith(n.to) && n.to !== "/")?.label ??
-        currentPath.replace("/", "").charAt(0).toUpperCase() + currentPath.slice(2);
+      : (MANAGER_NAV.find((n) => currentPath.startsWith(n.to) && n.to !== "/")?.label ??
+        currentPath.replace("/", "").charAt(0).toUpperCase() + currentPath.slice(2));
 
   return (
     <div className="flex min-h-screen bg-void font-body text-foreground antialiased">
@@ -98,9 +98,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center gap-2.5">
             <div
               className={`flex size-8 items-center justify-center rounded-md font-mono text-xs font-bold ${
-                isDriver
-                  ? "bg-glasshi text-ember"
-                  : "bg-ember text-void"
+                isDriver ? "bg-glasshi text-ember" : "bg-ember text-void"
               }`}
             >
               {isDriver ? `V${(driverUser?.vehicleIndex ?? 0) + 1}` : "HQ"}
@@ -109,10 +107,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <p className="truncate text-sm font-medium text-foreground">
                 {isDriver
                   ? driverUser?.driverName
-                  : (user as { managerName?: string }).managerName ?? company?.managerName ?? "Fleet Manager"}
+                  : ((user as { managerName?: string }).managerName ??
+                    company?.managerName ??
+                    "Fleet Manager")}
               </p>
               <p className="truncate font-mono text-[10px] text-faint">
-                {isDriver ? "Driver" : "Manager"} · {(user as { companyName?: string })?.companyName ?? company?.companyName ?? "QUANTA Fleet"}
+                {isDriver ? "Driver" : "Manager"} ·{" "}
+                {(user as { companyName?: string })?.companyName ??
+                  company?.companyName ??
+                  "QUANTA Fleet"}
               </p>
             </div>
           </div>
@@ -127,7 +130,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </p>
               <button
                 type="button"
-                onClick={() => { setDriverViewTab("route"); closeMobileMenu(); }}
+                onClick={() => {
+                  setDriverViewTab("route");
+                  closeMobileMenu();
+                }}
                 className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-[13px] transition ${
                   driverViewTab === "route"
                     ? "bg-ember/10 text-ember font-medium"
@@ -139,7 +145,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
               <button
                 type="button"
-                onClick={() => { setDriverViewTab("checklist"); closeMobileMenu(); }}
+                onClick={() => {
+                  setDriverViewTab("checklist");
+                  closeMobileMenu();
+                }}
                 className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-[13px] transition ${
                   driverViewTab === "checklist"
                     ? "bg-ember/10 text-ember font-medium"
@@ -158,7 +167,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <button
                   key={d.id}
                   type="button"
-                  onClick={() => { switchDriverForDemo(d.id); closeMobileMenu(); }}
+                  onClick={() => {
+                    switchDriverForDemo(d.id);
+                    closeMobileMenu();
+                  }}
                   className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-[12px] font-mono transition ${
                     d.id === driverUser?.id
                       ? "bg-ember/10 text-ember font-medium"
@@ -202,7 +214,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
               <button
                 type="button"
-                onClick={() => { setShowDriverDb(true); closeMobileMenu(); }}
+                onClick={() => {
+                  setShowDriverDb(true);
+                  closeMobileMenu();
+                }}
                 className="flex w-full items-center justify-between rounded-md px-2.5 py-2 text-left text-[13px] text-mist hover:bg-glass hover:text-foreground transition"
               >
                 <span>Driver Database</span>
@@ -213,7 +228,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
               <button
                 type="button"
-                onClick={() => { run(); closeMobileMenu(); }}
+                onClick={() => {
+                  run();
+                  closeMobileMenu();
+                }}
                 className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-md bg-ember py-2 text-xs font-semibold text-void transition hover:bg-emberdim"
               >
                 Re-solve Fleet
@@ -253,7 +271,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               className="rounded-md border border-line p-1.5 text-mist hover:text-foreground md:hidden"
               aria-label="Open navigation"
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <path d="M2 4h12M2 8h12M2 12h12" />
               </svg>
             </button>
@@ -268,15 +293,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <button
                 onClick={() => loginManager("Egreen Quanta Fleet", "manager123")}
                 className={`rounded px-2.5 py-1 font-mono text-[10px] transition ${
-                  isManager
-                    ? "bg-ember text-void font-semibold"
-                    : "text-mist hover:text-foreground"
+                  isManager ? "bg-ember text-void font-semibold" : "text-mist hover:text-foreground"
                 }`}
               >
                 Manager
               </button>
               <button
-                onClick={() => { if (drivers[0]) switchDriverForDemo(drivers[0].id); }}
+                onClick={() => {
+                  if (drivers[0]) switchDriverForDemo(drivers[0].id);
+                }}
                 className={`rounded px-2.5 py-1 font-mono text-[10px] transition ${
                   isDriver && driverUser?.vehicleIndex === 0
                     ? "bg-foreground text-background font-semibold"
@@ -286,7 +311,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 Driver 1
               </button>
               <button
-                onClick={() => { if (drivers[1]) switchDriverForDemo(drivers[1].id); }}
+                onClick={() => {
+                  if (drivers[1]) switchDriverForDemo(drivers[1].id);
+                }}
                 className={`rounded px-2.5 py-1 font-mono text-[10px] transition ${
                   isDriver && driverUser?.vehicleIndex === 1
                     ? "bg-foreground text-background font-semibold"

@@ -99,9 +99,7 @@ function FleetPage() {
             <div className="panel relative p-2">
               <div className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md border border-line bg-void/80 px-2 py-1">
                 <span className="size-1.5 rounded-full bg-ember" />
-                <span className="font-mono text-[10px] text-faint">
-                  {clock} IST
-                </span>
+                <span className="font-mono text-[10px] text-faint">{clock} IST</span>
               </div>
               <CityMap
                 routes={qpso?.best.routes ?? []}

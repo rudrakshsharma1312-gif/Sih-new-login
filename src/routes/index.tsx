@@ -6,8 +6,7 @@ import { HubSelectorBar } from "@/components/HubSelectorBar";
 import { routeLabel } from "@/lib/optimizer";
 import { useSolver } from "@/lib/solver";
 
-export const Route = createFileRoute("/")(
-  {
+export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "QUANTA — Fleet Route Optimization" },
@@ -22,8 +21,7 @@ export const Route = createFileRoute("/")(
       },
       {
         property: "og:description",
-        content:
-          "Fleet routing with QPSO on the Bengaluru road graph.",
+        content: "Fleet routing with QPSO on the Bengaluru road graph.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -115,9 +113,7 @@ function Overview() {
             <div className="mb-2 flex items-center justify-between px-2 pt-1">
               <div className="flex items-center gap-2">
                 <span className="size-1.5 rounded-full bg-ember" />
-                <span className="font-mono text-[10px] text-faint">
-                  Bengaluru · {clock} IST
-                </span>
+                <span className="font-mono text-[10px] text-faint">Bengaluru · {clock} IST</span>
               </div>
               <span className="badge-move-transit">In Transit</span>
             </div>
@@ -139,9 +135,7 @@ function Overview() {
                   <p className="text-xs font-medium text-foreground">
                     {qpso ? routeLabel(qpso.best.routes[0]!) : "Computing routes…"}
                   </p>
-                  <p className="font-mono text-[10px] text-faint">
-                    Vehicle 01 · QPSO optimal path
-                  </p>
+                  <p className="font-mono text-[10px] text-faint">Vehicle 01 · QPSO optimal path</p>
                 </div>
               </div>
             </div>

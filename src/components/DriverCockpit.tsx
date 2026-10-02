@@ -101,9 +101,14 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
                   </span>
                 </div>
                 <p className="font-mono text-[10px] text-faint">
-                  Fleet: <span className="text-foreground font-medium">{currentDriver.companyName}</span> ·
-                  Manager: <span className="text-ember font-medium">{currentDriver.managerName || "Fleet Manager"}</span> ·
-                  Driver: <strong className="text-foreground">{currentDriver.driverName}</strong> ({currentDriver.mobileNo})
+                  Fleet:{" "}
+                  <span className="text-foreground font-medium">{currentDriver.companyName}</span> ·
+                  Manager:{" "}
+                  <span className="text-ember font-medium">
+                    {currentDriver.managerName || "Fleet Manager"}
+                  </span>{" "}
+                  · Driver: <strong className="text-foreground">{currentDriver.driverName}</strong>{" "}
+                  ({currentDriver.mobileNo})
                 </p>
               </div>
             </div>
@@ -148,7 +153,8 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
           <div className="flex items-center gap-2.5">
             <span className="size-2 rounded-full bg-ember" />
             <p className="font-mono text-xs text-mist">
-              <span className="font-medium text-foreground">Assigned Route:</span> Vehicle #{vehicleIdx + 1}
+              <span className="font-medium text-foreground">Assigned Route:</span> Vehicle #
+              {vehicleIdx + 1}
               {hasCustomRoute ? (
                 <span className="ml-2 rounded border border-ember/30 bg-ember/10 px-2 py-0.5 text-[10px] text-foreground font-medium">
                   Custom
@@ -174,29 +180,29 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
                 </div>
                 <span className="badge-move-transit">In Transit</span>
               </div>
-              <CityMap
-                routes={[singleDriverRoute]}
-                className="aspect-[4/3] w-full rounded-md"
-              />
+              <CityMap routes={[singleDriverRoute]} className="aspect-[4/3] w-full rounded-md" />
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div className="panel p-3">
                 <p className="font-mono text-[10px] text-faint">Distance</p>
                 <p className="mt-1 font-display text-xl font-bold text-foreground">
-                  {routeDetails.totalKm.toFixed(1)} <span className="text-xs font-normal text-mist">km</span>
+                  {routeDetails.totalKm.toFixed(1)}{" "}
+                  <span className="text-xs font-normal text-mist">km</span>
                 </p>
               </div>
               <div className="panel p-3">
                 <p className="font-mono text-[10px] text-faint">Est. Time</p>
                 <p className="mt-1 font-display text-xl font-bold text-foreground">
-                  {routeDetails.totalMin.toFixed(0)} <span className="text-xs font-normal text-mist">min</span>
+                  {routeDetails.totalMin.toFixed(0)}{" "}
+                  <span className="text-xs font-normal text-mist">min</span>
                 </p>
               </div>
               <div className="panel p-3">
                 <p className="font-mono text-[10px] text-faint">Stops</p>
                 <p className="mt-1 font-display text-xl font-bold text-foreground">
-                  {routeDetails.stops.length} <span className="text-xs font-normal text-mist">stops</span>
+                  {routeDetails.stops.length}{" "}
+                  <span className="text-xs font-normal text-mist">stops</span>
                 </p>
               </div>
             </div>
@@ -268,7 +274,9 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
                     Order Details
                   </span>
                 </div>
-                <span className="font-mono text-[10px] text-faint">BLR-{String(vehicleIdx + 1).padStart(2, "0")}861</span>
+                <span className="font-mono text-[10px] text-faint">
+                  BLR-{String(vehicleIdx + 1).padStart(2, "0")}861
+                </span>
               </div>
 
               <div className="mt-3 flex items-center justify-between rounded-md bg-obsidian px-3 py-2 border border-line">
@@ -322,7 +330,9 @@ export function DriverCockpit({ embedded = false }: { embedded?: boolean }) {
                     Delivery Stops
                   </span>
                 </div>
-                <span className="font-mono text-[10px] text-faint">{routeDetails.stops.length} stops</span>
+                <span className="font-mono text-[10px] text-faint">
+                  {routeDetails.stops.length} stops
+                </span>
               </div>
 
               <div className="mt-3 space-y-2 max-h-[300px] overflow-y-auto pr-1">
