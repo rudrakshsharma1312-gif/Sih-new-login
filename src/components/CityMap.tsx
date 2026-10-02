@@ -45,7 +45,6 @@ const DARK_STYLE = [
 ];
 
 let loaderPromise: Promise<void> | null = null;
-const DEMO_KEY = "AIzaSyDRHBccTbYgRYWL-CuujngqnQldbPJAw4I";
 
 function shouldAttemptGoogleMapsLoad(key?: string): boolean {
   if (!key || typeof key !== "string" || key.trim().length < 10) return false;
@@ -61,9 +60,10 @@ function loadMaps(key: string, channel?: string): Promise<void> {
   loaderPromise = new Promise((resolve, reject) => {
     const w = window as unknown as Record<string, unknown>;
     w["gm_auth_failure"] = () => {
-      console.warn("Google Maps auth failure. Gracefully switching to Vector Road Graph.");
+      loaderPromise = null;
+      console.warn("Google Maps authentication failed; using the vector road graph instead.");
       window.dispatchEvent(new CustomEvent("gm_auth_failure_event"));
-      reject(new Error("Google Maps auth failure"));
+      reject(new Error("Google Maps authentication failed"));
     };
 
     w["__quantaMapsReady"] = () => resolve();
@@ -155,8 +155,7 @@ export function CityMap({
         : undefined;
 
     const envKey = (import.meta.env["VITE_GOOGLE_MAPS_API_KEY"] ||
-      import.meta.env["VITE_MAPS_API_KEY"] ||
-      DEMO_KEY) as string | undefined;
+      import.meta.env["VITE_MAPS_API_KEY"]) as string | undefined;
 
     const key = userCustomKey || envKey;
     const channel = import.meta.env["VITE_GOOGLE_MAPS_TRACKING_ID"] as string | undefined;
