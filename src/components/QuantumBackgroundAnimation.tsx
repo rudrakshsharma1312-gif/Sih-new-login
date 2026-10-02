@@ -95,7 +95,7 @@ export function QuantumBackgroundAnimation({
         maxRadius: Math.max(width, height) * 1.1,
         speed: 2.2 + i * 0.45,
         alpha: variant === "intro" ? 0.75 - i * 0.1 : 0.35 - i * 0.08,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         color: palette[i % palette.length]!,
         lineWidth: 1.5 + (waveCount - i) * 0.4,
       });
@@ -134,7 +134,7 @@ export function QuantumBackgroundAnimation({
 
     for (let i = 0; i < particleCount; i++) {
       // attractors has 5 elements, i % attractors.length is always in-bounds
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       const attractor = attractors[i % attractors.length]!;
       const orbitRad = 40 + Math.random() * (width > 768 ? 220 : 130);
       const angle = Math.random() * Math.PI * 2;
@@ -145,7 +145,7 @@ export function QuantumBackgroundAnimation({
         vx: (Math.random() - 0.5) * 0.7,
         vy: (Math.random() - 0.5) * 0.7,
         baseRadius: 1.5 + Math.random() * 2.2,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         color: palette[Math.floor(Math.random() * palette.length)]!,
         alpha: 0.3 + Math.random() * 0.5,
         phase: Math.random() * Math.PI * 2,
@@ -179,7 +179,6 @@ export function QuantumBackgroundAnimation({
       attractors[4] = { x: width * 0.65, y: height * 0.68 };
 
       particles.forEach((p, idx) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const attractor = attractors[idx % attractors.length]!;
         p.originX = attractor.x;
         p.originY = attractor.y;
@@ -195,7 +194,6 @@ export function QuantumBackgroundAnimation({
 
       // 1. Draw Upper Wave Rings (Only active for first few seconds, then finishes and fades out)
       for (let i = upperWaves.length - 1; i >= 0; i--) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const wave = upperWaves[i]!;
         wave.radius += wave.speed;
         const progress = wave.radius / wave.maxRadius;
@@ -227,7 +225,6 @@ export function QuantumBackgroundAnimation({
 
       // 2. Draw Continuous Lower Wave Rings (Moves as it is continuously)
       for (let i = lowerWaves.length - 1; i >= 0; i--) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const wave = lowerWaves[i]!;
         wave.radius += wave.speed;
         const progress = wave.radius / wave.maxRadius;
@@ -282,9 +279,8 @@ export function QuantumBackgroundAnimation({
       const maxConnectDistance = width > 768 ? 135 : 90;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const pi = particles[i]!;
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           const pj = particles[j]!;
           const dx = pi.x - pj.x;
           const dy = pi.y - pj.y;
@@ -319,7 +315,6 @@ export function QuantumBackgroundAnimation({
 
       // 4. Update and Render Quantum Particles
       for (let i = 0; i < particles.length; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const p = particles[i]!;
 
         // Orbit around attractor with quantum harmonic perturbation
